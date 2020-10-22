@@ -3,6 +3,11 @@ package com.gan.kafka;
 import java.time.Duration;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.LinkedBlockingDeque;
+import java.util.concurrent.ThreadFactory;
+import java.util.concurrent.ThreadPoolExecutor;
+import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import com.sun.tools.javac.util.ArrayUtils;
@@ -29,9 +34,8 @@ public class ConsumerTest {
 		//订阅主题
 		consumer.subscribe(Arrays.asList(topicArry));
 		new Thread(() -> {
+			ConsumerRecords<String, String> consumerRecords = consumer.poll(Duration.ofSeconds(MESSAGE_POLL_TIMEOUT));
 			while (true) {
-
-				ConsumerRecords<String, String> consumerRecords = consumer.poll(Duration.ofSeconds(MESSAGE_POLL_TIMEOUT));
 				for (ConsumerRecord<String, String> consumerRecord : consumerRecords) {
 					System.out.println("key:" + consumerRecord.key());
 					System.out.println("value:" + consumerRecord.value());
@@ -44,7 +48,8 @@ public class ConsumerTest {
 					}
 				}
 			}
-		});
+		}).start();
+
 	}
 
 }

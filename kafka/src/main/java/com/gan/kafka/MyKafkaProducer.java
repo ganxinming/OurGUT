@@ -19,7 +19,8 @@ public class MyKafkaProducer {
 
 	public static KafkaProducer<String, String> getKafkaProducer() {
 		Properties props = new Properties();
-		props.put("bootstrap.servers", "123");
+		// 声明kafka broker
+		props.put("bootstrap.servers", brokeList);
 		/**
 		 * 发送消息确认机制
 		 * - 0代表producer往集群发送数据不需要等到集群的返回，不确保消息发送成功。安全性最低但是效率最高。
@@ -36,8 +37,6 @@ public class MyKafkaProducer {
 		props.put("value.serializer", StringSerializer.class.getName());
 //		props.put("serializer.class", "kafka.serializer.StringEncoder");
 //		props.put("key.serializer.class", "kafka.serializer.StringEncoder");
-		// 声明kafka broker
-		props.put("metadata.broker.list",brokeList);
 		//发送方式:异步还是同步(async/sync)
 		props.put("producer.type","async");
 		//如果topic不存在,自动创建

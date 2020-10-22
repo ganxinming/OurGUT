@@ -27,6 +27,6 @@ public class ProducerTest {
 					break;
 				}
 			}
-		});
+		}).start();
 	}
 }
