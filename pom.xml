@@ -9,6 +9,7 @@
 		<module>ourUtils</module>
 		<module>kafka</module>
 		<module>jstorm</module>
+		<module>guava</module>
 	</modules>
 
 	<groupId>org.gan</groupId>
