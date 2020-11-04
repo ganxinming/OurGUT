@@ -58,7 +58,7 @@ public class FirstSpout extends BaseRichSpout {
 			Values values = processMqMsg(ourjstorm);
 			//如果指定了消息流ID，发射时也要指定，不指定则用默认流ID
 			outputCollector.emit(declareName,values);
-			System.out.println("spout********emit"+ourjstorm.toString());
+			System.out.println("spout********125"+ourjstorm.toString());
 	}
 
 	/**
