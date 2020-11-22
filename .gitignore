@@ -6,6 +6,9 @@
 *.iml
 out
 gen
+mvnw
+mvnw.*
+HELP.*
 /.idea/*
 */target/
 *.project
