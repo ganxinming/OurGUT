@@ -12,6 +12,8 @@
 		<module>guava</module>
 		<module>elasticsearch</module>
 		<module>webSpider</module>
+		<module>mock</module>
+		<module>ourspring/mock</module>
 	</modules>
 
 	<groupId>org.gan</groupId>
