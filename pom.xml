@@ -12,8 +12,8 @@
 		<module>guava</module>
 		<module>elasticsearch</module>
 		<module>webSpider</module>
-		<module>mock</module>
 		<module>ourspring/mock</module>
+		<module>java8</module>
 	</modules>
 
 	<groupId>org.gan</groupId>
@@ -48,6 +48,11 @@
 			<version>1.18.6</version>
 		</dependency>
 
+		<dependency>
+			<groupId>com.google.guava</groupId>
+			<artifactId>guava</artifactId>
+			<version>28.0-jre</version>
+		</dependency>
 	</dependencies>
 
 </project>

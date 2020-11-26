@@ -6,15 +6,15 @@ import org.springframework.stereotype.Component;
 /**
  * @author ganxinming
  * @createDate 2020/11/4
- * @description @Order注入顺序，多个实例注入，可以用List<UniversalFilter>
+ * @description
  */
-@Order(1)
+@Order(2)
 @Component
-public class TypeOneFilter implements UniversalFilter{
+public class TypeTwoFilter implements UniversalFilter{
 
 	@Override
 	public boolean isFilter(TestDomain domain) {
-		System.out.println("进行TypeOneFilter逻辑判断");
+		System.out.println("进行TypeTwoFilter逻辑判断");
 		return false;
 	}
 	
