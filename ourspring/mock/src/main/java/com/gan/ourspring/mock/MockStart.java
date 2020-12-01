@@ -2,10 +2,8 @@ package com.gan.ourspring.mock;
 
 import com.gan.ourspring.mock.pojo.User;
 import org.junit.Test;
-import org.junit.runner.RunWith;
 import org.mockito.Mock;
 
-import org.mockito.runners.MockitoJUnitRunner;
 
 import static org.mockito.Mockito.*;
 
@@ -14,7 +12,6 @@ import static org.mockito.Mockito.*;
  * @createDate 2020/11/25
  * @description
  */
-@RunWith(MockitoJUnitRunner.class)
 public class MockStart {
 
 	@Mock

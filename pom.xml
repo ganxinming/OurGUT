@@ -14,6 +14,7 @@
 		<module>webSpider</module>
 		<module>ourspring/mock</module>
 		<module>java8</module>
+		<module>ourspring/swagger</module>
 	</modules>
 
 	<groupId>org.gan</groupId>
