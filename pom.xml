@@ -15,6 +15,7 @@
 		<module>ourspring/mock</module>
 		<module>java8</module>
 		<module>ourspring/swagger</module>
+		<module>ourspring/Hbase</module>
 	</modules>
 
 	<groupId>org.gan</groupId>
