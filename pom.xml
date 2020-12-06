@@ -16,6 +16,7 @@
 		<module>java8</module>
 		<module>ourspring/swagger</module>
 		<module>ourspring/Hbase</module>
+		<module>ourspring/async</module>
 	</modules>
 
 	<groupId>org.gan</groupId>
