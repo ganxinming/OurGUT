@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 /**
  * @author ganxinming
- * @createDate 2020/11/26
+ * @createDate 2021/1/10
  * @description
  */
 @Controller
@@ -42,3 +42,4 @@ public class FilterController {
 		return true;
 	}
 }
+

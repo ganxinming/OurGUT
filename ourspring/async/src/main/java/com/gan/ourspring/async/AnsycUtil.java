@@ -24,7 +24,7 @@ public class AnsycUtil {
 		Map<Long, List<String>> map= Maps.newHashMap();
 		List<String> list= Lists.newArrayList();
 		list.add("abc");
-		Thread.sleep(100000L);
+		Thread.sleep(1000L);
 		map.put(123L,list);
 		return new AsyncResult<>(map);
 	}

@@ -1,8 +1,8 @@
-package com.gan.ourspring.web.controller;
+package com.gan.ourspring.filter;
 
 import javax.validation.Valid;
 
-import com.gan.ourspring.web.entity.User;
+import lombok.extern.slf4j.Slf4j;
 
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.ObjectError;
@@ -12,9 +12,10 @@ import org.springframework.web.bind.annotation.RestController;
 
 /**
  * @author ganxinming
- * @createDate 2020/11/5
+ * @createDate 2021/1/10
  * @description
  */
+@Slf4j
 @RestController
 public class UserController {
 

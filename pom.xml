@@ -17,6 +17,7 @@
 		<module>ourspring/swagger</module>
 		<module>ourspring/Hbase</module>
 		<module>ourspring/async</module>
+		<module>ourspring/Aop</module>
 	</modules>
 
 	<groupId>org.gan</groupId>

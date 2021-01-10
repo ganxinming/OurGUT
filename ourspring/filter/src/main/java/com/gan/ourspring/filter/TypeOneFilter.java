@@ -5,8 +5,8 @@ import org.springframework.stereotype.Component;
 
 /**
  * @author ganxinming
- * @createDate 2020/11/4
- * @description @Order注入顺序，多个实例注入，可以用List<UniversalFilter>
+ * @createDate 2021/1/10
+ * @description
  */
 @Order(1)
 @Component
@@ -17,5 +17,5 @@ public class TypeOneFilter implements UniversalFilter{
 		System.out.println("进行TypeOneFilter逻辑判断");
 		return false;
 	}
-	
+
 }

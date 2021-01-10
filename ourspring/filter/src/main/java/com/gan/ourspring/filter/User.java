@@ -1,11 +1,15 @@
-package com.gan.ourspring.web.entity;
+package com.gan.ourspring.filter;
+
+import javax.validation.constraints.Email;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 
 import lombok.Data;
-import javax.validation.constraints.*;
+
 /**
  * @author ganxinming
- * @createDate 2020/11/4
- * @description 优雅参数判断
+ * @createDate 2021/1/10
+ * @description
  */
 @Data
 public class User {
@@ -24,3 +28,4 @@ public class User {
 	@Email(message = "邮箱格式不正确")
 	private String email;
 }
+

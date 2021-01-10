@@ -1,6 +1,7 @@
 package com.gan.ourspring.async;
 
 import java.time.Instant;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ExecutionException;
@@ -22,8 +23,10 @@ public class AnsycController {
 	AnsycService ansycService;
 
 	@RequestMapping("/test")
-	public void test() throws InterruptedException, ExecutionException {
-
-		return;
+	public String test() throws InterruptedException, ExecutionException {
+		ansycService.startAnsycDiff();
+		ansycService.startAnsyc();
+		ansycService.startSynchronize();
+		return "hello ansyc";
 	}
 }

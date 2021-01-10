@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+	<!--日志目录-->
+	<property name="LOG_HOME" value="./log"/>
+	<!--配置输出格式 %d:配置时间，后面跟格式 %thread:线程名 %msg:消息体  %n换行-->
+	<property name="ENCODER_PATTERN" value="%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger -%msg%n"/>
+
+	<!--appender：配置项，规则，通过这个节点内容配置，我们可以配置输出位置（控制台，文件），输出格式等-->
+	<!--appender：ConsoleAppender输出到控制台-->
+	<appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+		<!--应用输出格式-->
+		<encoder>
+			<pattern>${ENCODER_PATTERN}</pattern>
+		</encoder>
+	</appender>
+
+	<!--appender：RollingFileAppender滚动日志：一般是按照日期来输出日志-->
+	<appender name="info" class="ch.qos.logback.core.rolling.RollingFileAppender">
+		<encoder>
+			<pattern>${ENCODER_PATTERN}</pattern>
+		</encoder>
+		<!--当前日志生成的文件名：即最新的日志的文件名，不带时间格式-->
+		<file>${LOG_HOME}/ourSpring-info.log</file>
+		<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+			<!--滚动日志生成的文件名，%i是每超过timeBasedFileNamingAndTriggeringPolicy策略定义的规则，
+			则加1：类似x.timw.0,x.time.2-->
+			<fileNamePattern>${LOG_HOME}/ourSpring-info.%d{yyyy-MM-dd}.%i.log</fileNamePattern>
+			<!--保留7天-->
+			<maxHistory>7</maxHistory>
+			<timeBasedFileNamingAndTriggeringPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
+				<maxFileSize>500MB</maxFileSize>
+			</timeBasedFileNamingAndTriggeringPolicy>
+		</rollingPolicy>
+		<!--过滤器：只有通过这个才能分error，info日志统计-->
+		<!--所有appender默认拦截所有等级日志，例如这里，不想拦截error，而其他等级使用这个-->
+		<filter class="ch.qos.logback.classic.filter.LevelFilter">
+			<!--针对error-->
+			<level>ERROR</level>
+			<!--如果匹配等级则忽略-->
+			<onMatch>DENY</onMatch>
+			<!--如果不匹配则全部接受-->
+			<onMismatch>ACCEPT</onMismatch>
+		</filter>
+	</appender>
+
+	<appender name="error" class="ch.qos.logback.core.rolling.RollingFileAppender">
+		<encoder>
+			<pattern>${ENCODER_PATTERN}</pattern>
+		</encoder>
+		<file>${LOG_HOME}/ourSpring.error</file>
+		<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+			<maxHistory>7</maxHistory>
+			<fileNamePattern>${LOG_HOME}/ourSpring-error.%d{yyyy-MM-dd}.error</fileNamePattern>
+		</rollingPolicy>
+		<filter class="ch.qos.logback.classic.filter.LevelFilter"><!-- 只打印错误日志 -->
+			<level>ERROR</level>
+			<onMatch>ACCEPT</onMatch>
+			<onMismatch>DENY</onMismatch>
+		</filter>
+	</appender>
+	<!--错误报警日志 限制打印条数-->
+	<appender name="error_alarm" class="ch.qos.logback.core.rolling.RollingFileAppender">
+		<encoder>
+			<pattern>${ENCODER_PATTERN}</pattern>
+		</encoder>
+		<file>${LOG_HOME}/risk-schedule-scalping-error.log</file>
+		<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+			<maxHistory>7</maxHistory>
+			<fileNamePattern>${LOG_HOME}/risk-schedule-scalping-error.%d{yyyy-MM-dd}.log</fileNamePattern>
+		</rollingPolicy>
+		<!--限制时间窗口(1天)级别日志打印条数 -->
+		<filter class="com.gan.ourspring.filter.WindowLimitFilter">
+			<level>ERROR</level>
+			<window>86400000</window>
+			<limit>10</limit>
+			<onMatch>ACCEPT</onMatch>
+			<onMismatch>DENY</onMismatch>
+		</filter>
+	</appender>
+
+	<appender name="dubbo_consumer_log_appender" class="ch.qos.logback.core.rolling.RollingFileAppender">
+		<encoder>
+			<pattern>${ENCODER_PATTERN}</pattern>
+		</encoder>
+		<file>${LOG_HOME}/dubbo_consumer_filter.log</file>
+		<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+			<fileNamePattern>${LOG_HOME}/dubbo_consumer_filter.%d{yyyy-MM-dd}.%i.log</fileNamePattern>
+			<maxHistory>7</maxHistory>
+			<timeBasedFileNamingAndTriggeringPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
+				<maxFileSize>500MB</maxFileSize>
+			</timeBasedFileNamingAndTriggeringPolicy>
+		</rollingPolicy>
+	</appender>
+
+	<!--使用方式：LoggerFactory.getLogger("dubbo_consumer_filter_log")-->
+	<!--自定义logger，使用这个则不用root的日志规则-->
+	<!--additivity="false"是否继承root的所有appender，换句话说就是，应用了这个log的，还是会打印root应该打印的日志-->
+	<logger name="dubbo_consumer_filter_log" level="INFO" additivity="false">
+		<appender-ref ref="dubbo_consumer_log_appender"/>
+	</logger>
+
+	<!--对于所有使用@Slf4j或者LoggerFactory.getLogger(.class)，都是默认使用root-->
+	<!--项目基础的日志级别为info,比info等级低的debug则不会打印-->
+	<root level="INFO">
+		        <appender-ref ref="STDOUT" />
+		<appender-ref ref="info"/>
+		<appender-ref ref="error"/>
+		<appender-ref ref="error_alarm"/>
+		<appender-ref ref="dubbo_consumer_log_appender"/>
+	</root>
+</configuration>

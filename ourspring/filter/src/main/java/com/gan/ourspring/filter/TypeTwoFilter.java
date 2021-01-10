@@ -5,7 +5,7 @@ import org.springframework.stereotype.Component;
 
 /**
  * @author ganxinming
- * @createDate 2020/11/4
+ * @createDate 2021/1/10
  * @description
  */
 @Order(2)
@@ -17,5 +17,5 @@ public class TypeTwoFilter implements UniversalFilter{
 		System.out.println("进行TypeTwoFilter逻辑判断");
 		return false;
 	}
-	
+
 }
