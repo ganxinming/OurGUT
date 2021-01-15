@@ -27,7 +27,6 @@ public class TestAnnotation {
 	public String testAnnotation() throws ExecutionException, InterruptedException {
 		System.out.println("开始调用");
 		Thread.sleep(1000);
-		System.out.println("测试huystrix");
 		return "hystrix";
 	}
 
