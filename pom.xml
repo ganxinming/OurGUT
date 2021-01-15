@@ -18,6 +18,7 @@
 		<module>ourspring/Hbase</module>
 		<module>ourspring/async</module>
 		<module>ourspring/Aop</module>
+		<module>ourspring/hystrix</module>
 	</modules>
 
 	<groupId>org.gan</groupId>

@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+	<parent>
+		<artifactId>ourspring</artifactId>
+		<groupId>org.gan</groupId>
+		<version>0.0.1-SNAPSHOT</version>
+	</parent>
+  <groupId>org.gan</groupId>
+  <artifactId>hystrix</artifactId>
+  <version>1.0-SNAPSHOT</version>
+
+  <name>hystrix</name>
+  <!-- FIXME change it to the project's website -->
+
+	<dependencies>
+<!--		配置版-->
+<!--		<dependency>-->
+<!--			<groupId>com.netflix.hystrix</groupId>-->
+<!--			<artifactId>hystrix-core</artifactId>-->
+<!--			<version>1.5.12</version>-->
+<!--		</dependency>-->
+
+<!--		注解版,也可以做配置版，但是有些线程池参数没有-->
+		<dependency>
+			<groupId>com.netflix.hystrix</groupId>
+			<artifactId>hystrix-javanica</artifactId>
+			<version>1.5.2</version>
+		</dependency>
+	</dependencies>
+</project>

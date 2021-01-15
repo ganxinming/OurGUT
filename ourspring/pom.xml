@@ -20,6 +20,7 @@
 		<module>swagger</module>
 		<module>async</module>
 		<module>filter</module>
+		<module>hystrix</module>
 	</modules>
 
 	<properties>
