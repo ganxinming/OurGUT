@@ -21,6 +21,11 @@
 		<module>async</module>
 		<module>filter</module>
 		<module>hystrix</module>
+		<module>ourzookeeper</module>
+		<module>sendHttpRequest</module>
+		<module>springSecuritys</module>
+		<module>springuser</module>
+		<module>fileUpAnddown</module>
 	</modules>
 
 	<properties>
