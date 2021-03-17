@@ -15,7 +15,3 @@ spring:
         dialect: org.hibernate.dialect.MySQL8Dialect
     show-sql: true
 
-  security:
-    user:
-      name: abc
-      password: 123

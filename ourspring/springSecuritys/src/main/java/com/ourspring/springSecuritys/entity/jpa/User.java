@@ -22,6 +22,15 @@ import org.springframework.security.core.userdetails.UserDetails;
  * @author ganxinming
  * @createDate 2021/2/1
  * @description
+ * 用户类实体实现UserDetails，可以添加自己需要的实体属性，为UserDetailsService提供服务
+ *  UserDetails 默认提供了：
+ * 用户的权限集， 默认需要添加 ROLE_ 前缀
+ * 用户的加密后的密码， 不加密会使用 {noop} 前缀
+ * 应用内唯一的用户名
+ * 账户是否过期
+ * 账户是否锁定
+ * 凭证是否过期
+ * 用户是否可用
  */
 @Data
 @Entity(name = "t_user")
@@ -49,34 +58,5 @@ public class User implements UserDetails {
 		return authorities;
 	}
 
-	@Override
-	public String getPassword() {
-		return null;
-	}
-
-	@Override
-	public String getUsername() {
-		return null;
-	}
-
-	@Override
-	public boolean isAccountNonExpired() {
-		return false;
-	}
-
-	@Override
-	public boolean isAccountNonLocked() {
-		return false;
-	}
-
-	@Override
-	public boolean isCredentialsNonExpired() {
-		return false;
-	}
-
-	@Override
-	public boolean isEnabled() {
-		return false;
-	}
 
 }
