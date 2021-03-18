@@ -26,6 +26,7 @@
 		<module>springSecuritys</module>
 		<module>springuser</module>
 		<module>fileUpAnddown</module>
+		<module>springDubbo</module>
 	</modules>
 
 	<properties>
