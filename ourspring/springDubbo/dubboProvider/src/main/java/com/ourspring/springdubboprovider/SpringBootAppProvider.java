@@ -48,4 +48,5 @@ public class SpringBootAppProvider {
 	public static void main(String[] args) {
 		SpringApplication.run(SpringBootAppProvider.class,args);
 	}
+
 }
