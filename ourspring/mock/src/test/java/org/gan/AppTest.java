@@ -1,0 +1,24 @@
+package org.gan;
+
+import static org.junit.Assert.assertTrue;
+
+import org.junit.Test;
+
+/**
+ * Unit test for simple App.
+ */
+public class AppTest 
+{
+    /**
+     * Rigorous Test :-)
+     */
+    @Test
+    public void shouldAnswerWithTrue()
+    {
+		Integer integer = Integer.valueOf("0");
+		if (integer<1){
+			System.out.println(1);
+		}
+
+	}
+}

@@ -1,0 +1,51 @@
+2021-01-10 20:53:29 [background-preinit] INFO  org.hibernate.validator.internal.util.Version -HV000001: Hibernate Validator 6.1.6.Final
+2021-01-10 20:53:29 [restartedMain] INFO  com.gan.ourspring.filter.OurspringApplication -Starting OurspringApplication on 192.168.0.104 with PID 22713 (/Users/ganxinming/myProjects/OurGUT/ourspring/filter/target/classes started by ganxinming in /Users/ganxinming/myProjects/OurGUT)
+2021-01-10 20:53:29 [restartedMain] INFO  com.gan.ourspring.filter.OurspringApplication -No active profile set, falling back to default profiles: default
+2021-01-10 20:53:29 [restartedMain] INFO  org.springframework.boot.devtools.env.DevToolsPropertyDefaultsPostProcessor -Devtools property defaults active! Set 'spring.devtools.add-properties' to 'false' to disable
+2021-01-10 20:53:29 [restartedMain] INFO  org.springframework.boot.devtools.env.DevToolsPropertyDefaultsPostProcessor -For additional web related logging consider setting the 'logging.level.web' property to 'DEBUG'
+2021-01-10 20:53:30 [restartedMain] INFO  org.springframework.boot.web.embedded.tomcat.TomcatWebServer -Tomcat initialized with port(s): 8080 (http)
+2021-01-10 20:53:30 [restartedMain] INFO  org.apache.coyote.http11.Http11NioProtocol -Initializing ProtocolHandler ["http-nio-8080"]
+2021-01-10 20:53:30 [restartedMain] INFO  org.apache.catalina.core.StandardService -Starting service [Tomcat]
+2021-01-10 20:53:30 [restartedMain] INFO  org.apache.catalina.core.StandardEngine -Starting Servlet engine: [Apache Tomcat/9.0.39]
+2021-01-10 20:53:30 [restartedMain] INFO  org.apache.catalina.core.ContainerBase.[Tomcat].[localhost].[/] -Initializing Spring embedded WebApplicationContext
+2021-01-10 20:53:30 [restartedMain] INFO  org.springframework.boot.web.servlet.context.ServletWebServerApplicationContext -Root WebApplicationContext: initialization completed in 1070 ms
+2021-01-10 20:53:31 [restartedMain] INFO  org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor -Initializing ExecutorService 'applicationTaskExecutor'
+2021-01-10 20:53:31 [restartedMain] INFO  org.springframework.boot.devtools.autoconfigure.OptionalLiveReloadServer -LiveReload server is running on port 35729
+2021-01-10 20:53:31 [restartedMain] INFO  org.apache.coyote.http11.Http11NioProtocol -Starting ProtocolHandler ["http-nio-8080"]
+2021-01-10 20:53:31 [restartedMain] INFO  org.springframework.boot.web.embedded.tomcat.TomcatWebServer -Tomcat started on port(s): 8080 (http) with context path ''
+2021-01-10 20:53:31 [restartedMain] INFO  com.gan.ourspring.filter.OurspringApplication -Started OurspringApplication in 1.89 seconds (JVM running for 2.434)
+2021-01-10 20:54:16 [SpringContextShutdownHook] INFO  org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor -Shutting down ExecutorService 'applicationTaskExecutor'
+2021-01-10 20:55:49 [background-preinit] INFO  org.hibernate.validator.internal.util.Version -HV000001: Hibernate Validator 6.1.6.Final
+2021-01-10 20:55:49 [restartedMain] INFO  com.gan.ourspring.filter.OurspringApplication -Starting OurspringApplication on 192.168.0.104 with PID 22762 (/Users/ganxinming/myProjects/OurGUT/ourspring/filter/target/classes started by ganxinming in /Users/ganxinming/myProjects/OurGUT)
+2021-01-10 20:55:49 [restartedMain] INFO  com.gan.ourspring.filter.OurspringApplication -No active profile set, falling back to default profiles: default
+2021-01-10 20:55:49 [restartedMain] INFO  org.springframework.boot.devtools.env.DevToolsPropertyDefaultsPostProcessor -Devtools property defaults active! Set 'spring.devtools.add-properties' to 'false' to disable
+2021-01-10 20:55:49 [restartedMain] INFO  org.springframework.boot.devtools.env.DevToolsPropertyDefaultsPostProcessor -For additional web related logging consider setting the 'logging.level.web' property to 'DEBUG'
+2021-01-10 20:55:50 [restartedMain] INFO  org.springframework.boot.web.embedded.tomcat.TomcatWebServer -Tomcat initialized with port(s): 8080 (http)
+2021-01-10 20:55:50 [restartedMain] INFO  org.apache.coyote.http11.Http11NioProtocol -Initializing ProtocolHandler ["http-nio-8080"]
+2021-01-10 20:55:50 [restartedMain] INFO  org.apache.catalina.core.StandardService -Starting service [Tomcat]
+2021-01-10 20:55:50 [restartedMain] INFO  org.apache.catalina.core.StandardEngine -Starting Servlet engine: [Apache Tomcat/9.0.39]
+2021-01-10 20:55:50 [restartedMain] INFO  org.apache.catalina.core.ContainerBase.[Tomcat].[localhost].[/] -Initializing Spring embedded WebApplicationContext
+2021-01-10 20:55:50 [restartedMain] INFO  org.springframework.boot.web.servlet.context.ServletWebServerApplicationContext -Root WebApplicationContext: initialization completed in 1066 ms
+2021-01-10 20:55:50 [restartedMain] INFO  org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor -Initializing ExecutorService 'applicationTaskExecutor'
+2021-01-10 20:55:50 [restartedMain] INFO  org.springframework.boot.devtools.autoconfigure.OptionalLiveReloadServer -LiveReload server is running on port 35729
+2021-01-10 20:55:50 [restartedMain] INFO  org.apache.coyote.http11.Http11NioProtocol -Starting ProtocolHandler ["http-nio-8080"]
+2021-01-10 20:55:50 [restartedMain] INFO  org.springframework.boot.web.embedded.tomcat.TomcatWebServer -Tomcat started on port(s): 8080 (http) with context path ''
+2021-01-10 20:55:50 [restartedMain] INFO  com.gan.ourspring.filter.OurspringApplication -Started OurspringApplication in 1.913 seconds (JVM running for 2.451)
+2021-01-10 20:56:09 [SpringContextShutdownHook] INFO  org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor -Shutting down ExecutorService 'applicationTaskExecutor'
+2021-01-10 20:56:37 [background-preinit] INFO  org.hibernate.validator.internal.util.Version -HV000001: Hibernate Validator 6.1.6.Final
+2021-01-10 20:56:38 [restartedMain] INFO  com.gan.ourspring.filter.OurspringApplication -Starting OurspringApplication on 192.168.0.104 with PID 22781 (/Users/ganxinming/myProjects/OurGUT/ourspring/filter/target/classes started by ganxinming in /Users/ganxinming/myProjects/OurGUT)
+2021-01-10 20:56:38 [restartedMain] INFO  com.gan.ourspring.filter.OurspringApplication -No active profile set, falling back to default profiles: default
+2021-01-10 20:56:38 [restartedMain] INFO  org.springframework.boot.devtools.env.DevToolsPropertyDefaultsPostProcessor -Devtools property defaults active! Set 'spring.devtools.add-properties' to 'false' to disable
+2021-01-10 20:56:38 [restartedMain] INFO  org.springframework.boot.devtools.env.DevToolsPropertyDefaultsPostProcessor -For additional web related logging consider setting the 'logging.level.web' property to 'DEBUG'
+2021-01-10 20:56:39 [restartedMain] INFO  org.springframework.boot.web.embedded.tomcat.TomcatWebServer -Tomcat initialized with port(s): 8080 (http)
+2021-01-10 20:56:39 [restartedMain] INFO  org.apache.coyote.http11.Http11NioProtocol -Initializing ProtocolHandler ["http-nio-8080"]
+2021-01-10 20:56:39 [restartedMain] INFO  org.apache.catalina.core.StandardService -Starting service [Tomcat]
+2021-01-10 20:56:39 [restartedMain] INFO  org.apache.catalina.core.StandardEngine -Starting Servlet engine: [Apache Tomcat/9.0.39]
+2021-01-10 20:56:39 [restartedMain] INFO  org.apache.catalina.core.ContainerBase.[Tomcat].[localhost].[/] -Initializing Spring embedded WebApplicationContext
+2021-01-10 20:56:39 [restartedMain] INFO  org.springframework.boot.web.servlet.context.ServletWebServerApplicationContext -Root WebApplicationContext: initialization completed in 1039 ms
+2021-01-10 20:56:39 [restartedMain] INFO  org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor -Initializing ExecutorService 'applicationTaskExecutor'
+2021-01-10 20:56:39 [restartedMain] INFO  org.springframework.boot.devtools.autoconfigure.OptionalLiveReloadServer -LiveReload server is running on port 35729
+2021-01-10 20:56:39 [restartedMain] INFO  org.apache.coyote.http11.Http11NioProtocol -Starting ProtocolHandler ["http-nio-8080"]
+2021-01-10 20:56:39 [restartedMain] INFO  org.springframework.boot.web.embedded.tomcat.TomcatWebServer -Tomcat started on port(s): 8080 (http) with context path ''
+2021-01-10 20:56:39 [restartedMain] INFO  com.gan.ourspring.filter.OurspringApplication -Started OurspringApplication in 1.896 seconds (JVM running for 2.454)
+2021-01-10 20:57:02 [SpringContextShutdownHook] INFO  org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor -Shutting down ExecutorService 'applicationTaskExecutor'

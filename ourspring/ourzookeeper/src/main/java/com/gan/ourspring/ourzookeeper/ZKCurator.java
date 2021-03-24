@@ -71,7 +71,7 @@ public class ZKCurator {
 	@Test
 	public void testCreate() throws Exception {
 		// 参数1：要创建的节点的路径 参数2：节点数据 参数3：节点的权限 参数4：节点的类型
-		zkClient.create("/eclipse/aaa", "aaaData".getBytes(), ZooDefs.Ids.OPEN_ACL_UNSAFE, CreateMode.PERSISTENT);
+		zkClient.create("/eclipse", "aaaData".getBytes(), ZooDefs.Ids.OPEN_ACL_UNSAFE, CreateMode.PERSISTENT);
 	}
 
 	public static void main(String[] args) throws InterruptedException {
