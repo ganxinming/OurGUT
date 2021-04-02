@@ -1,9 +1,13 @@
 package com.ourspring.excel.controller;
 
 import java.io.File;
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+
+import javax.servlet.http.HttpServletResponse;
 
 import com.alibaba.excel.EasyExcel;
 import com.alibaba.excel.ExcelReader;
@@ -56,23 +60,37 @@ public class TestController {
 		// 这里 需要指定写用哪个class去写，然后写到第一个sheet，名字为模板 然后文件流会自动关闭
 		// 如果这里想使用03 则 传入excelType参数即可
 		EasyExcel.write(fileName, DemoData.class).sheet("模板").doWrite(data());
-
-		// 写法2
-		fileName = "/Users/ganxinming/Desktop/risk1.xlsx";
-		// 这里 需要指定写用哪个class去写
-		ExcelWriter excelWriter = null;
-		try {
-			excelWriter = EasyExcel.write(fileName, DemoData.class).build();
-			WriteSheet writeSheet = EasyExcel.writerSheet("模板").build();
-			excelWriter.write(data(), writeSheet);
-		} finally {
-			// 千万别忘记finish 会帮忙关闭流
-			if (excelWriter != null) {
-				excelWriter.finish();
-			}
-		}
+		System.out.println(123);
+//		// 写法2
+//		fileName = "/Users/ganxinming/Desktop/risk1.xlsx";
+//		// 这里 需要指定写用哪个class去写
+//		ExcelWriter excelWriter = null;
+//		try {
+//			excelWriter = EasyExcel.write(fileName, DemoData.class).build();
+//			WriteSheet writeSheet = EasyExcel.writerSheet("模板").build();
+//			excelWriter.write(data(), writeSheet);
+//		} finally {
+//			// 千万别忘记finish 会帮忙关闭流
+//			if (excelWriter != null) {
+//				excelWriter.finish();
+//			}
+//		}
 		return "write";
 	}
+
+
+	@RequestMapping("/webWrite")
+	public String webWrite(HttpServletResponse response) throws Exception {
+		// 这里注意 有同学反应使用swagger 会导致各种问题，请直接用浏览器或者用postman
+		response.setContentType("application/vnd.ms-excel");
+		response.setCharacterEncoding("utf-8");
+		// 这里URLEncoder.encode可以防止中文乱码 当然和easyexcel没有关系
+		String fileName = URLEncoder.encode("测试", "UTF-8");
+		response.setHeader("Content-disposition", "attachment;filename=" + fileName + ".xlsx");
+		EasyExcel.write(response.getOutputStream(), DemoData.class).sheet("模板").doWrite(data());
+		return "";
+	}
+
 
 
 	private List<DemoData> data() {
