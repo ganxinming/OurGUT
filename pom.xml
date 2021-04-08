@@ -19,6 +19,7 @@
 		<module>ourspring/async</module>
 		<module>ourspring/Aop</module>
 		<module>ourspring/hystrix</module>
+		<module>jsonTest</module>
 
 	</modules>
 

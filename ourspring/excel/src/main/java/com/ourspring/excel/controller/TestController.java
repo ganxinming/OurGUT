@@ -1,6 +1,7 @@
 package com.ourspring.excel.controller;
 
 import java.io.File;
+import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.util.ArrayList;
@@ -12,13 +13,17 @@ import javax.servlet.http.HttpServletResponse;
 import com.alibaba.excel.EasyExcel;
 import com.alibaba.excel.ExcelReader;
 import com.alibaba.excel.ExcelWriter;
+import com.alibaba.excel.exception.ExcelAnalysisException;
 import com.alibaba.excel.read.metadata.ReadSheet;
 import com.alibaba.excel.write.metadata.WriteSheet;
 import com.ourspring.excel.entity.DemoData;
+import com.ourspring.excel.entity.DownloadModule;
 import com.ourspring.excel.listener.DemoDataListener;
+import org.apache.xmlbeans.XmlException;
 
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
 /**
  * @author ganxinming
@@ -79,6 +84,20 @@ public class TestController {
 	}
 
 
+
+	@RequestMapping("/webRead")
+	public String webRead(MultipartFile file,HttpServletResponse response) throws Exception {
+
+		List<Object> objects = null;
+		try {
+			objects = EasyExcel.read(file.getInputStream()).head(DownloadModule.class).sheet().doReadSync();
+		} catch (ExcelAnalysisException e) {
+			System.out.println("上传正确文件");
+		}
+		System.out.println(objects);
+		return "";
+	}
+
 	@RequestMapping("/webWrite")
 	public String webWrite(HttpServletResponse response) throws Exception {
 		// 这里注意 有同学反应使用swagger 会导致各种问题，请直接用浏览器或者用postman
@@ -91,6 +110,17 @@ public class TestController {
 		return "";
 	}
 
+
+	@RequestMapping("/webWriteModule")
+	public String webWriteModule(HttpServletResponse response) throws Exception {
+		response.setContentType("application/vnd.ms-excel");
+		response.setCharacterEncoding("utf-8");
+		// 这里URLEncoder.encode可以防止中文乱码 当然和easyexcel没有关系
+		String fileName = URLEncoder.encode("测试", "UTF-8");
+		response.setHeader("Content-disposition", "attachment;filename=" + fileName + ".xlsx");
+		EasyExcel.write(response.getOutputStream(), DownloadModule.class).useDefaultStyle(false).sheet("模板").doWrite(null);
+		return "";
+	}
 
 
 	private List<DemoData> data() {
