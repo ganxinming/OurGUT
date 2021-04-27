@@ -137,5 +137,22 @@ public class TestController {
 		return list;
 	}
 
+	@RequestMapping("/thread")
+	public void test213(){
+		Thread thread = new Thread() {
+			@Override
+			public void run() {
+				while(true){
+					try {
+						sleep(500);
+						System.out.println(1);
+					} catch (InterruptedException e) {
+						e.printStackTrace();
+					}
 
+				}
+			}
+		};
+		thread.start();
+	}
 }

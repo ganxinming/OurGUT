@@ -28,6 +28,8 @@
 		<module>fileUpAnddown</module>
 		<module>springDubbo</module>
 		<module>excel</module>
+		<module>PracticalSkills</module>
+		<module>springMvc</module>
 	</modules>
 
 	<properties>
