@@ -16,6 +16,10 @@ public abstract class AbstractCommonTask implements CommonTask{
 	private static Logger LOG = (Logger) LoggerFactory.getLogger(AbstractCommonTask.class);
 	private final static ThreadLocal<Long> TIME_CONSUMER_WATCHER = ThreadLocal.withInitial(System::currentTimeMillis);
 
+	private String name;
+	AbstractCommonTask(String name){
+		this.name=name;
+	}
 	@Override
 	public void beforeExecute() {
 		TIME_CONSUMER_WATCHER.set(System.currentTimeMillis());

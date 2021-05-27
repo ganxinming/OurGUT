@@ -1,0 +1,4 @@
+server:
+  address: 9528
+  servlet:
+    context-path: /dev-api

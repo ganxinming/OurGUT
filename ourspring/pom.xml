@@ -30,6 +30,9 @@
 		<module>excel</module>
 		<module>PracticalSkills</module>
 		<module>springMvc</module>
+		<module>designModel</module>
+		<module>risk</module>
+		<module>esJob</module>
 	</modules>
 
 	<properties>
