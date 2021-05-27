@@ -1,0 +1,22 @@
+spring:
+  profiles:
+    active: dev
+
+  datasource:
+    url: jdbc:mysql://localhost:3306/mybatis_plus?useSSL=true&useUnicode=true&characterEncoding=UTF-8&serverTimezone=UTC
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    username: root
+    password: root
+
+
+#
+mybatis-plus:
+  #执行sql日志打印
+  configuration:
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+
+  # 配置逻辑删除
+  global-config:
+    db-config:
+      logic-delete-value: 1    # 删除了的值的 delete 为 1
+      logic-not-delete-value: 0    # 没有删除的值的 delete 为 0

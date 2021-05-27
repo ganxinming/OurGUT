@@ -33,6 +33,7 @@
 		<module>designModel</module>
 		<module>risk</module>
 		<module>esJob</module>
+		<module>mybatisPlus</module>
 	</modules>
 
 	<properties>
