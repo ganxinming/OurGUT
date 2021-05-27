@@ -9,5 +9,6 @@ public class TestCoreNum {
 	public static void main(String[] args) {
 		int CORE_NUM = Runtime.getRuntime().availableProcessors();
 		System.out.println(CORE_NUM);
+		System.out.println("test1");
 	}
 }
