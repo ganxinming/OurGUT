@@ -21,6 +21,9 @@ import org.springframework.context.annotation.ImportResource;
  */
 
 @SpringBootApplication
+/**
+ * 在META-INF/spring下建文件，无需注解导入
+ */
 @ImportResource(locations= {"classpath:provider.xml"})
 public class SpringBootAppProvider {
 
@@ -28,14 +31,33 @@ public class SpringBootAppProvider {
 	GenelService genelService;
 
 	//使用API的形式对外发布Service
+
+	/**
+	 * 所有xml能做的，api都能做
+	 */
 	@PostConstruct
 	public void init(){
-		ServiceConfig<GenelService> serviceConfig = new ServiceConfig<GenelService>();
-		serviceConfig.setApplication(new ApplicationConfig("first-dubbo-provider"));
-		serviceConfig.setRegistry(registry());
-		serviceConfig.setInterface(GenelService.class);
-		serviceConfig.setRef(genelService);
-		serviceConfig.export();
+		// 当前应用配置
+//		ApplicationConfig application = new ApplicationConfig();
+//		application.setName("provider");
+//		application.setOwner("ganxinming");
+//
+//		// 连接注册中心配置
+//		RegistryConfig registry =registry();
+//
+//		// 服务提供者协议配置
+//		ProtocolConfig protocol = new ProtocolConfig();
+//		protocol.setName("dubbo");
+//		protocol.setPort(20980);
+//
+//		ServiceConfig<GenelService> serviceConfig = new ServiceConfig<GenelService>();
+//		serviceConfig.setApplication(application);
+//		serviceConfig.setRegistry(registry);
+//		serviceConfig.setProtocol(protocol);
+//		serviceConfig.setInterface(GenelService.class);
+//		serviceConfig.setRef(genelService);
+//		serviceConfig.export();
+
 	}
 
 	public static RegistryConfig registry() {

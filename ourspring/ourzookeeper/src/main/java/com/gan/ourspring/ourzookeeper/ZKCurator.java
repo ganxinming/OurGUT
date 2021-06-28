@@ -1,5 +1,7 @@
 package com.gan.ourspring.ourzookeeper;
 
+import java.util.List;
+
 import org.apache.curator.framework.CuratorFramework;
 import org.apache.curator.framework.CuratorFrameworkFactory;
 import org.apache.curator.framework.recipes.cache.ChildData;
@@ -11,6 +13,7 @@ import org.apache.curator.framework.recipes.cache.PathChildrenCacheListener;
 import org.apache.curator.framework.recipes.cache.TreeCache;
 import org.apache.curator.framework.recipes.cache.TreeCacheEvent;
 import org.apache.curator.framework.recipes.cache.TreeCacheListener;
+import org.apache.curator.retry.ExponentialBackoffRetry;
 import org.apache.curator.retry.RetryNTimes;
 import org.apache.zookeeper.CreateMode;
 import org.apache.zookeeper.WatchedEvent;
@@ -25,6 +28,16 @@ import org.slf4j.LoggerFactory;
  * @author ganxinming
  * @createDate 2021/1/17
  * @description
+ *
+ * Curator解决了很多zookeeper客户端非常底层的细节开发工作，包括连接重连、反复注册wathcer(原生的watch只能用一次)和NodeExistsException 异常等。
+ *
+ * 事件监听
+ * zookeeper原生支持通过注册watcher来进行事件监听，但是其使用不是特别方便，需要开发人员自己反复注册watcher，比较繁琐。
+ *
+ * Curator引入Cache来实现对zookeeper服务端事务的监听。Cache是Curator中对事件监听的包装，其对事件的监听其实可以近似看作是一个本地缓存视图和远程Zookeeper视图的对比过程。
+ * 同时，Curator能够自动为开发人员处理反复注册监听，从而大大简化原生api开发的繁琐过程。
+ *
+ *
  */
 public class ZKCurator {
 
@@ -38,50 +51,16 @@ public class ZKCurator {
 	private static final String ADDR = "115.159.202.204:2181";
 	private static final String PATH = "/zk_test";
 
-	@Before
-	public void init() throws Exception {
-		zkClient = new ZooKeeper(ZK_URL, TIME_OUT, (WatchedEvent event) -> {
-			// 收到事件通知后的回调函数（应该是我们自己的事件处理逻辑）
-			System.out.println(event.getType() + "---" + event.getPath());
-			try {
-				zkClient.getChildren("/", true);
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-		});
-	}
-
-	/**
-	 * 设置值
-	 *
-	 * @throws Exception
-	 */
-	@Test
-	public void testSetData() throws Exception {
-		zkClient.setData("/eclipse", "world".getBytes(), -1);
-		byte[] data = zkClient.getData("/eclipse", false, null);
-		System.out.println(new String(data));
-	}
-
-	/**
-	 * 创建节点
-	 *
-	 * @throws Exception
-	 */
-	@Test
-	public void testCreate() throws Exception {
-		// 参数1：要创建的节点的路径 参数2：节点数据 参数3：节点的权限 参数4：节点的类型
-		zkClient.create("/eclipse", "aaaData".getBytes(), ZooDefs.Ids.OPEN_ACL_UNSAFE, CreateMode.PERSISTENT);
-	}
-
 	public static void main(String[] args) throws InterruptedException {
-		final CuratorFramework zkClient = CuratorFrameworkFactory.newClient(ADDR, new RetryNTimes(10, 5000));
+
+		//创建ZKCurator类，通过CuratorFrameworkFactory创建
+		final CuratorFramework zkClient = getClient();
 		zkClient.start();
 		System.out.println(zkClient.checkExists());
 		System.out.println("开始创建Zookeeper客户端...");
 		try {
-			registerWatcher(zkClient);
-			//registerNodeCache(zkClient);
+			registerPathCacheWatcher(zkClient);
+			registerNodeCache(zkClient);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -91,16 +70,49 @@ public class ZKCurator {
 		zkClient.close();
 	}
 
-	private static void registerWatcher(CuratorFramework zkClient) throws Exception {
+	/**
+	 * Node Cache
+	 * 节点监听器
+	 * @param zkClient
+	 * @throws Exception
+	 * zookeeper原生支持通过注册watcher来进行事件监听，但是其使用不是特别方便，需要开发人员自己反复注册watcher，比较繁琐。
+	 *
+	 * Curator引入Cache来实现对zookeeper服务端事务的监听。Cache是Curator中对事件监听的包装，其对事件的监听其实可以近似看作是一个本地缓存视图和远程Zookeeper视图的对比过程。
+	 * 同时，Curator能够自动为开发人员处理反复注册监听，从而大大简化原生api开发的繁琐过程。
+	 */
+	private static void registerNodeCacheWatcher(CuratorFramework zkClient) throws Exception {
+		final NodeCache nodeCache = new NodeCache(zkClient, "/abc");
+		nodeCache.start(true);
+		nodeCache.getListenable().addListener(()->{
+			System.out.println("监听节点发生变化："+nodeCache.getCurrentData().getPath()+"值为："+nodeCache.getCurrentData().getData());
+		});
+
+		setData(zkClient, "/abc", "cache1".getBytes());
+		setData(zkClient, "/abc", "cache2".getBytes());
+		Thread.sleep(1000);
+
+//		nodeCache.close();
+	}
+
+
+	/**
+	 * 路径监听器
+	 * @param zkClient
+	 * @throws Exception
+	 *
+	 * Path Cache  用来监听ZNode的子节点事件
+	 * 用来监听ZNode的子节点事件，包括added、updateed、removed，Path Cache会同步子节点的状态，
+	 * 产生的事件会传递给注册的PathChildrenCacheListener
+	 */
+	private static void registerPathCacheWatcher(CuratorFramework zkClient) throws Exception {
 		/**
-		 * 注册监听器，当前节点不存在，创建该节点：未抛出异常及错误日志
 		 *  注册子节点触发type=[CHILD_ADDED]
 		 *  更新触发type=[CHILD_UPDATED]
 		 *
 		 *  zk挂掉type=CONNECTION_SUSPENDED,，一段时间后type=CONNECTION_LOST
 		 *  重启zk：type=CONNECTION_RECONNECTED, data=null
 		 *  更新子节点：type=CHILD_UPDATED, data=ChildData{path='/zktest111/tt1', stat=4294979983,4294979993,1501037475236,1501037733805,2,0,0,0,6,0,4294979983
-		 , data=[55, 55, 55, 55, 55, 55]}
+		 , data=[55, 55, 55, 55, 55, 55]}:触发
 		 ​
 		 *  删除子节点type=CHILD_REMOVED
 		 *  更新根节点：不触发
@@ -118,6 +130,35 @@ public class ZKCurator {
 				printChildrenCacheEvent(pathChildrenCacheEvent);
 			}
 		});
+
+		watcher.getListenable().addListener((client1, event) -> {
+			switch (event.getType()) {
+				case CHILD_ADDED:
+					System.out.println("CHILD_ADDED:" + event.getData().getPath());
+					break;
+				case CHILD_REMOVED:
+					System.out.println("CHILD_REMOVED:" + event.getData().getPath());
+					break;
+				case CHILD_UPDATED:
+					System.out.println("CHILD_UPDATED:" + event.getData().getPath());
+					break;
+				case CONNECTION_LOST:
+					System.out.println("CONNECTION_LOST:" + event.getData().getPath());
+					break;
+				case CONNECTION_RECONNECTED:
+					System.out.println("CONNECTION_RECONNECTED:" + event.getData().getPath());
+					break;
+				case CONNECTION_SUSPENDED:
+					System.out.println("CONNECTION_SUSPENDED:" + event.getData().getPath());
+					break;
+				case INITIALIZED:
+					System.out.println("INITIALIZED:" + event.getData().getPath());
+					break;
+				default:
+					break;
+			}
+		});
+
         /*PathChildrenCache.StartMode说明如下
         *POST_INITIALIZED_EVENT
         *1、在监听器启动的时候即，会枚举当前路径所有子节点，触发CHILD_ADDED类型的事件
@@ -131,6 +172,9 @@ public class ZKCurator {
 		watcher.start(PathChildrenCache.StartMode.BUILD_INITIAL_CACHE);
 		System.out.println("注册watcher成功...");
 	}
+
+
+
 	public static void printChildrenCacheEvent(PathChildrenCacheEvent event){
 		ChildData data=event.getData();
 		System.out.println("类型："+event.getType()+" 路径："+data.getPath()+" 数据："+new String(data.getData())+"状态："+data.getStat().toString());
@@ -157,6 +201,12 @@ public class ZKCurator {
 		nodeCache.start(true);
 	}
 
+	/**
+	 * Path Cache和Node Cache的“合体”，监视路径下的创建、更新、删除事件，并缓存路径下所有孩子结点的数据。
+	 *
+	 * @param client
+	 * @throws Exception
+	 */
 	public static void registTreeCache(CuratorFramework client) throws Exception {
 		/**
 		 * TreeCache.nodeState == LIVE的时候，才能执行getCurrentChildren非空,默认为PENDING
@@ -188,7 +238,131 @@ public class ZKCurator {
 				System.out.println("treeCacheEvent: "+treeCacheEvent);
 			}
 		});
+
+		treeCache.getListenable().addListener((client1, event) -> {
+			switch (event.getType()){
+				case NODE_ADDED:
+					System.out.println("NODE_ADDED:" + event.getData().getPath());
+					break;
+				case NODE_REMOVED:
+					System.out.println("NODE_REMOVED:" + event.getData().getPath());
+					break;
+				case NODE_UPDATED:
+					System.out.println("NODE_UPDATED:" + event.getData().getPath());
+					break;
+				case CONNECTION_LOST:
+					System.out.println("CONNECTION_LOST:" + event.getData().getPath());
+					break;
+				case CONNECTION_RECONNECTED:
+					System.out.println("CONNECTION_RECONNECTED:" + event.getData().getPath());
+					break;
+				case CONNECTION_SUSPENDED:
+					System.out.println("CONNECTION_SUSPENDED:" + event.getData().getPath());
+					break;
+				case INITIALIZED:
+					System.out.println("INITIALIZED:" + event.getData().getPath());
+					break;
+				default:
+					break;
+			}
+		});
+		String path="/cc";
+		client.create().withMode(CreateMode.PERSISTENT).forPath(path);
+		Thread.sleep(1000);
+
+		client.create().withMode(CreateMode.PERSISTENT).forPath(path + "/c1");
+		Thread.sleep(1000);
+
+		setData(client, path, "test".getBytes());
+		Thread.sleep(1000);
+
+		client.delete().forPath(path + "/c1");
+		Thread.sleep(1000);
+
+		client.delete().forPath(path);
+		Thread.sleep(1000);
+
 		//没有开启模式作为入参的方法
 		treeCache.start();
 	}
+
+
+	/**
+	 * 创建节点，可以根据情况调整节点
+	 * @param client
+	 * @throws Exception
+	 */
+	public static void createNode(CuratorFramework client) throws Exception {
+		/**
+		 * 如果不确定父节点是否存在，可以创建他们creatingParentsIfNeeded
+		 * 设置节点权限  withACL
+		 *
+		 */
+		client.create().creatingParentsIfNeeded().withMode(CreateMode.PERSISTENT).withACL(ZooDefs.Ids.OPEN_ACL_UNSAFE).forPath("/name","7".getBytes());
+	}
+
+
+	/**
+	 * 创建CuratorFramework
+	 * @return
+	 *
+	 * 为了实现不同的Zookeeper业务之间的隔离，需要为每个业务分配一个独立的命名空间（NameSpace）其实就是创建个根节点
+	 */
+	public static CuratorFramework getClient() {
+		return CuratorFrameworkFactory.builder()
+				.connectString(ADDR)
+				.retryPolicy(new ExponentialBackoffRetry(1000, 3))
+				.connectionTimeoutMs(15 * 1000) //连接超时时间，默认15秒
+				.sessionTimeoutMs(60 * 1000) //会话超时时间，默认60秒
+				.namespace("test") //设置命名空间
+				.build();
+	}
+
+
+
+	public static void create(final CuratorFramework client, final String path, final byte[] payload) throws Exception {
+		client.create().creatingParentsIfNeeded().forPath(path, payload);
+	}
+
+	public static void createEphemeral(final CuratorFramework client, final String path, final byte[] payload) throws Exception {
+		client.create().withMode(CreateMode.EPHEMERAL).forPath(path, payload);
+	}
+
+	public static String createEphemeralSequential(final CuratorFramework client, final String path, final byte[] payload) throws Exception {
+		return client.create().withProtection().withMode(CreateMode.EPHEMERAL_SEQUENTIAL).forPath(path, payload);
+	}
+
+	public static void setData(final CuratorFramework client, final String path, final byte[] payload) throws Exception {
+		client.setData().forPath(path, payload);
+	}
+
+	public static void delete(final CuratorFramework client, final String path) throws Exception {
+		client.delete().deletingChildrenIfNeeded().forPath(path);
+	}
+
+	public static void guaranteedDelete(final CuratorFramework client, final String path) throws Exception {
+		client.delete().guaranteed().forPath(path);
+	}
+
+	public static String getData(final CuratorFramework client, final String path) throws Exception {
+		return new String(client.getData().forPath(path));
+	}
+
+	public static List<String> getChildren(final CuratorFramework client, final String path) throws Exception {
+		return client.getChildren().forPath(path);
+	}
+
+	//=====================================================================================  待开发
+
+	/**
+	 * 选举
+	 */
+
+	/**
+	 * 分布式锁，各种锁（可重入，不可重入）
+	 * 分布式计数器、分布式Barrier
+	 */
+
+
+
 }

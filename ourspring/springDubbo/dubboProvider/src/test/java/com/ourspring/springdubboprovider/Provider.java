@@ -15,6 +15,11 @@ import org.apache.dubbo.config.ServiceConfig;
  */
 public class Provider {
 
+	/**
+	 * 泛化调用
+	 * @param args
+	 * @throws IOException
+	 */
 	public static void main(String[] args) throws IOException {
 		ServiceConfig<GenelService> serviceConfig = new ServiceConfig<GenelService>();
 		serviceConfig.setApplication(new ApplicationConfig("first-dubbo-provider"));

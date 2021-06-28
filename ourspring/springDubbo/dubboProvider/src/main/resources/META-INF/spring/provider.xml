@@ -3,29 +3,31 @@
 	   xmlns="http://www.springframework.org/schema/beans"
 	   xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
        http://dubbo.apache.org/schema/dubbo http://dubbo.apache.org/schema/dubbo/dubbo.xsd">
-	<dubbo:application name="demo-provider" owner="ganxinming">
-<!--		qos是Dubbo的在线运维命令，可以对服务进行动态的配置、控制及查询,但是没有测试成功-->
+	<dubbo:application name="demo-provider" owner="ganxinming" logger="slf4j">
+		<!--		qos是Dubbo的在线运维命令，可以对服务进行动态的配置、控制及查询,但是没有测试成功-->
 		<dubbo:parameter key="qos.enable" value="true"/>
-<!--		拒绝远端主机发出的命令，只允许服务本机执行-->
+		<!--		拒绝远端主机发出的命令，只允许服务本机执行-->
 		<dubbo:parameter key="qos.accept.foreign.ip" value="false"/>
 		<dubbo:parameter key="qos.port" value="55555"/>
 	</dubbo:application>
 
-<!--	本地直连不走zk，但是消费者调用时需要拿到url-->
-	<dubbo:registry address="N/A"/>
-<!--	<dubbo:registry address="zookeeper://115.159.202.204:2181"/>-->
+	<!--	本地直连不走zk，但是消费者调用时需要拿到url-->
+<!--	<dubbo:registry address="N/A"/>-->
+		<dubbo:registry address="zookeeper://115.159.202.204:2181" check="false"/>
 	<!--可设置多个协议，webserovice、Thrift、Hessain、http-->
 	<dubbo:protocol name="dubbo" port="20890"/>
-<!--	<dubbo:protocol name="rmi" port="20890"/>-->
+	<!--	<dubbo:protocol name="rmi" port="20890"/>-->
 
 	<!--暴露服务接口-->
 	<dubbo:service interface="com.springDubbo.dubboService.TestService" ref="testService" version="2.0.0"/>
 
 	<!--generic开始泛化调用-->
+<!--	集群容错，失败自动切换，当出现失败，重试其它服务器-->
 	<dubbo:service interface="com.springDubbo.dubboService.generic.GenelService"
-				   ref="genelService" version="1.0.0" />
+				   ref="genelService" version="1.0.0"  retries="2" cluster="failover" loadbalance="roundrobin"/>
 
 	<!--监控中心配置， 用于配置连接监控中心相关信息，可以不配置-->
 	<dubbo:monitor protocol="registry"/>
+	<dubbo:protocol accesslog="true" />
 
 </beans>

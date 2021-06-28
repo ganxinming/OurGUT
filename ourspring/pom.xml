@@ -35,6 +35,7 @@
 		<module>esJob</module>
 		<module>mybatisPlus</module>
 		<module>springDataSource</module>
+		<module>springJvm</module>
 	</modules>
 
 	<properties>
