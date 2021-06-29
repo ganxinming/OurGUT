@@ -10,7 +10,7 @@ import java.lang.annotation.Target;
 /**
  * @author ganxinming
  * @createDate 2021/6/18
- * @description 服务端限流
+ * @description 服务端统一接口限流
  */
 @Inherited
 @Documented

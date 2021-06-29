@@ -1,7 +1,12 @@
 package com.gan.ourspring.aop.controller;
 
+import cn.hutool.core.lang.Dict;
+import cn.hutool.json.JSONUtil;
+import com.gan.ourspring.aop.annotation.RateLimiterStrong;
 import com.gan.ourspring.aop.annotation.ServiceLimit;
+import lombok.extern.slf4j.Slf4j;
 
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -12,6 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
  */
 
 @RestController
+@Slf4j
 public class TestController {
 
 	@RequestMapping("/test")
@@ -37,6 +43,13 @@ public class TestController {
 	public String aroud(String taskName,int shardingTotalCount,String shardingItemList){
 		System.out.println(taskName+shardingItemList+shardingTotalCount);
 		return "测试AOP";
+	}
+
+	@RateLimiterStrong(value = 0.5, timeout = 1)
+	@GetMapping("/test1")
+	public String test1() {
+		log.info("【test1】被执行了。。。。。");
+		return JSONUtil.toJsonStr(Dict.create().set("msg", "hello,world!").set("description", "别想一直看到我，不信你快速刷新看看~"));
 	}
 
 }
