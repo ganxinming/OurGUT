@@ -1,0 +1,208 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--		logback框架会默认加载classpath下命名为logback-spring或logback的配置文件-->
+<configuration scan="true" scanPeriod="60 seconds">
+	<!--日志目录-->
+	<property name="LOG_HOME" value="/Users/test/logs/springLog"/>
+	<!--格式化输出：%d表示日期，%thread表示线程名，%-5level：级别从左显示5个字符宽度%msg：日志消息，%n是换行符-->
+	<property name="ENCODER_PATTERN"
+			  value="%d{yyyy-MM-dd HH:mm:ss.SSS} [%-5level][%thread][%X{traceId}][%X{innerTraceId}] %logger{36}:%line   - %msg%n"/>
+
+	<!--appender：配置项，规则，通过这个节点内容配置，我们可以配置输出位置（控制台，文件），输出格式等-->
+	<!--appender：ConsoleAppender输出到控制台-->
+	<appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+		<!--<Encoding>UTF-8</Encoding>-->
+		<encoder>
+			<pattern>${ENCODER_PATTERN}</pattern>
+		</encoder>
+	</appender>
+
+	<!--	对于每个appender，只要配置了这个组件，那么初始化的时候一定会生成这个日志文件   -->
+	<!--appender：RollingFileAppender滚动日志：一般是按照日期来输出日志-->
+	<appender name="info" class="ch.qos.logback.core.rolling.RollingFileAppender">
+		<!--<Encoding>UTF-8</Encoding>-->
+		<!--当前日志生成的文件名：即最新的日志的文件名，不带时间格式-->
+		<file>${LOG_HOME}/springLog-info.log</file>
+		<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+			<!--滚动日志生成的文件名，%i是每超过timeBasedFileNamingAndTriggeringPolicy策略定义的规则，
+则加1：类似x.timw.0,x.time.2-->
+			<fileNamePattern>${LOG_HOME}/springLog-info.%d{yyyy-MM-dd}-%i.log.gz</fileNamePattern>
+			<!--保留7天-->
+			<maxHistory>7</maxHistory>
+			<timeBasedFileNamingAndTriggeringPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
+				<maxFileSize>512MB</maxFileSize>
+			</timeBasedFileNamingAndTriggeringPolicy>
+		</rollingPolicy>
+		<encoder>
+			<pattern>${ENCODER_PATTERN}</pattern>
+		</encoder>
+		<!--过滤器：只有通过这个才能分error，info日志统计-->
+		<!--所有appender默认拦截所有等级日志，例如这里，不想拦截error，而其他等级使用这个-->
+		<filter class="ch.qos.logback.classic.filter.LevelFilter">
+			<!--针对error-->
+			<level>ERROR</level>
+			<!--如果匹配等级则忽略-->
+			<onMatch>DENY</onMatch>
+			<!--如果不匹配则全部接受-->
+			<onMismatch>ACCEPT</onMismatch>
+		</filter>
+<!--		简单点说就是不拦截error日志-->
+	</appender>
+
+<!--	之前的日志配置方式是基于同步的，每次日志输出到文件都会进行一次磁盘IO。采用异步写日志的方式而不让此次写日志发生磁盘IO，阻塞线程从而造成不必要的性能损耗-->
+	<!-- 异步输出，异步的log片段必须在同步段后面，否则不起作用 -->
+<!--	对于logback来说异步日志里面的队列是一个有界ArrayBlockingQueue，相当于所有异步日志打印任务放入队列，然后另起一个线程慢慢消费任务-->
+	<appender name="info-async" class="ch.qos.logback.classic.AsyncAppender">
+<!--		discardingThreshold设置为0说明永远不会丢弃日志-->
+<!--		默认情况下，当BlockingQueue还有20%容量，他将丢弃TRACE、DEBUG和INFO级别的event，只保留WARN和ERROR级别的event。为了保持所有的events，设置该值为0。-->
+		<discardingThreshold>80</discardingThreshold>
+<!--		BlockingQueue的最大容量，默认情况下，大小为256。-->
+		<queueSize>10240</queueSize>
+<!--		提取调用者数据的代价是相当昂贵的。为了提升性能，默认情况下，当event被加入到queue时，event关联的调用者数据不会被提取。默认情况下，只有"cheap"的数据，如线程名。-->
+		<includeCallerData>true</includeCallerData>
+		<!-- 添加附加的appender,最多只能添加一个 -->
+		<appender-ref ref="info"/>
+		<includeCallerData>true</includeCallerData>
+<!--		如果队列满则直接返回，而不是被挂起当前线程-->
+<!--		如果不配置，大量日志时，会将当前执行线程阻塞在打日志的地方，等日志清理完在放当前执行线程-->
+		<neverBlock>true</neverBlock>
+	</appender>
+
+	<appender name="error" class="ch.qos.logback.core.rolling.RollingFileAppender">
+		<file>${LOG_HOME}/springLog-error.log</file>
+		<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+			<fileNamePattern>${LOG_HOME}/springLog-error.%d{yyyy-MM-dd}.log.gz</fileNamePattern>
+			<maxHistory>14</maxHistory>
+		</rollingPolicy>
+		<encoder>
+			<pattern>${ENCODER_PATTERN}</pattern>
+		</encoder>
+		<filter class="ch.qos.logback.classic.filter.LevelFilter"><!-- 只打印错误日志 -->
+			<level>ERROR</level>
+			<onMatch>ACCEPT</onMatch>
+			<onMismatch>DENY</onMismatch>
+		</filter>
+	</appender>
+
+	<appender name="error-async" class="ch.qos.logback.classic.AsyncAppender">
+		<discardingThreshold>80</discardingThreshold>
+		<queueSize>512</queueSize>
+		<includeCallerData>true</includeCallerData>
+		<neverBlock>true</neverBlock>
+		<appender-ref ref="error"/>
+	</appender>
+
+
+
+<!--&lt;!&ndash;	错误报警日志 限制打印条数&ndash;&gt;-->
+<!--	<appender name="error_alarm" class="ch.qos.logback.core.rolling.RollingFileAppender">-->
+<!--		<encoder>-->
+<!--			<pattern>${ENCODER_PATTERN}</pattern>-->
+<!--		</encoder>-->
+<!--		<file>${LOG_HOME}/risk-schedule-scalping-error.log</file>-->
+<!--		<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">-->
+<!--			<maxHistory>7</maxHistory>-->
+<!--			<fileNamePattern>${LOG_HOME}/risk-schedule-scalping-error.%d{yyyy-MM-dd}.log</fileNamePattern>-->
+<!--		</rollingPolicy>-->
+<!--		&lt;!&ndash;限制时间窗口(1天)级别日志打印条数 &ndash;&gt;-->
+<!--		<filter class="com.gan.ourspring.filter.WindowLimitFilter">-->
+<!--			<level>ERROR</level>-->
+<!--			<window>86400000</window>-->
+<!--			<limit>10</limit>-->
+<!--			<onMatch>ACCEPT</onMatch>-->
+<!--			<onMismatch>DENY</onMismatch>-->
+<!--		</filter>-->
+<!--	</appender>-->
+
+
+	<appender name="monitor_appender" class="ch.qos.logback.core.rolling.RollingFileAppender">
+		<file>${LOG_HOME}/monitor-info.log</file>
+		<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+			<fileNamePattern>${LOG_HOME}/monitor-info.%d{yyyy-MM-dd}-%i.log.gz</fileNamePattern>
+			<maxHistory>3</maxHistory>
+			<timeBasedFileNamingAndTriggeringPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
+				<maxFileSize>512MB</maxFileSize>
+			</timeBasedFileNamingAndTriggeringPolicy>
+		</rollingPolicy>
+		<encoder>
+			<pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} %message%n</pattern>
+		</encoder>
+	</appender>
+
+
+
+	<appender name="dubbo_consumer_log_appender" class="ch.qos.logback.core.rolling.RollingFileAppender">
+		<file>${LOG_HOME}/dubbo_consumer.log</file>
+		<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+			<fileNamePattern>${LOG_HOME}/dubbo_consumer.%d{yyyy-MM-dd}-%i.log.gz</fileNamePattern>
+			<maxHistory>7</maxHistory>
+			<timeBasedFileNamingAndTriggeringPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
+				<maxFileSize>512MB</maxFileSize>
+			</timeBasedFileNamingAndTriggeringPolicy>
+		</rollingPolicy>
+		<layout class="ch.qos.logback.classic.PatternLayout">
+			<Pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} %msg%n</Pattern>
+		</layout>
+	</appender>
+
+<!--	设置日志异步打印-->
+	<appender name="async_dubbo_consumer_log" class="ch.qos.logback.classic.AsyncAppender">
+		<discardingThreshold>0</discardingThreshold>
+		<queueSize>512</queueSize>
+		<appender-ref ref="dubbo_consumer_log_appender"/>
+	</appender>
+
+	<!--使用方式：LoggerFactory.getLogger("dubbo_consumer_log")-->
+	<!--自定义logger，使用这个则不用root的日志规则-->
+	<!--additivity="false"是否继承root的所有appender，换句话说就是，应用了这个log的，还是会打印root应该打印的日志，设置false则不会-->
+	<logger name="dubbo_consumer_log" level="INFO" additivity="false">
+		<appender-ref ref="async_dubbo_consumer_log"/>
+	</logger>
+
+	<appender name="dubbo_provider_log_appender" class="ch.qos.logback.core.rolling.RollingFileAppender">
+		<file>${LOG_HOME}/dubbo_provider.log</file>
+		<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+			<fileNamePattern>${LOG_HOME}/dubbo_provider.%d{yyyy-MM-dd}-%i.log.gz</fileNamePattern>
+			<maxHistory>7</maxHistory>
+			<timeBasedFileNamingAndTriggeringPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
+				<maxFileSize>512MB</maxFileSize>
+			</timeBasedFileNamingAndTriggeringPolicy>
+		</rollingPolicy>
+		<layout class="ch.qos.logback.classic.PatternLayout">
+			<Pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} %msg%n</Pattern>
+		</layout>
+	</appender>
+	<appender name="async_dubbo_provider_log" class="ch.qos.logback.classic.AsyncAppender">
+		<discardingThreshold>0</discardingThreshold>
+		<queueSize>512</queueSize>
+		<appender-ref ref="dubbo_provider_log_appender"/>
+	</appender>
+	<logger name="dubbo_provider_log" level="INFO" additivity="false">
+		<appender-ref ref="async_dubbo_provider_log"/>
+	</logger>
+
+
+
+
+
+
+	<appender name="monitor-async" class="ch.qos.logback.classic.AsyncAppender">
+		<discardingThreshold>80</discardingThreshold>
+		<queueSize>512</queueSize>
+		<includeCallerData>true</includeCallerData>
+		<neverBlock>true</neverBlock>
+		<appender-ref ref="monitor_appender"/>
+	</appender>
+
+	<logger name="monitor_log" additivity="false">
+		<level value="info"/>
+		<appender-ref ref="monitor-async"/>
+	</logger>
+
+	<root level="INFO">
+		<appender-ref ref="info-async"/>
+		<appender-ref ref="error-async"/>
+		<appender-ref ref="STDOUT"/>
+	</root>
+
+
+</configuration>

@@ -48,7 +48,9 @@ public class ServiceLimitAspect {
 				double acquire = rateLimiter.acquire();
 				log.warn("service invoke is block: {},job:{}",acquire,joinPoint.getSignature());
 				object=joinPoint.proceed();
-				log.info("success second:{}",System.currentTimeMillis()-start);
+				if(log.isInfoEnabled()){
+					log.info("success second:{}",System.currentTimeMillis()-start);
+				}
 			}
 		} catch (Throwable throwable) {
 			throwable.printStackTrace();

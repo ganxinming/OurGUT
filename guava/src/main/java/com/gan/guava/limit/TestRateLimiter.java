@@ -1,4 +1,4 @@
-package com.gan.guava;
+package com.gan.guava.limit;
 
 import com.google.common.util.concurrent.RateLimiter;
 
