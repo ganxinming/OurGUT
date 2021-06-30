@@ -37,6 +37,7 @@
 		<module>springDataSource</module>
 		<module>springJvm</module>
 		<module>springLog</module>
+		<module>springTest</module>
 	</modules>
 
 	<properties>
