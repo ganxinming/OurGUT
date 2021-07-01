@@ -1,0 +1,19 @@
+<beans xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	   xmlns:dubbo="http://dubbo.apache.org/schema/dubbo"
+	   xmlns="http://www.springframework.org/schema/beans"
+	   xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+       http://dubbo.apache.org/schema/dubbo http://dubbo.apache.org/schema/dubbo/dubbo.xsd">
+
+	<dubbo:application name="demo-advance-pro"/>
+
+<!--	<dubbo:registry address="N/A"/>-->
+	<dubbo:registry address="zookeeper://115.159.202.204:2181"/>
+
+	<dubbo:protocol name="dubbo" port="20890"/>
+	<!--暴露服务接口-->
+	<dubbo:service interface="com.springDubbo.dubboService.provider.DubboService" ref="dubboService" version="1.0.0"/>
+
+	<dubbo:provider filter="providerFilter" ></dubbo:provider>
+	<dubbo:consumer filter="consumerFilter" ></dubbo:consumer>
+
+</beans>

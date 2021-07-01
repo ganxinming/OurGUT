@@ -2,22 +2,12 @@
 <beans xmlns="http://www.springframework.org/schema/beans"
 	   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	   xmlns:dubbo="http://dubbo.apache.org/schema/dubbo"
-	   xsi:schemaLocation="http://www.springframework.org/schema/beans
-	    http://www.springframework.org/schema/beans/spring-beans-4.3.xsd
-	    http://dubbo.apache.org/schema/dubbo
-	    http://dubbo.apache.org/schema/dubbo/dubbo.xsd">
+	   xsi:schemaLocation="http://www.springframework.org/schema/beans        http://www.springframework.org/schema/beans/spring-beans-4.3.xsd        http://dubbo.apache.org/schema/dubbo        http://dubbo.apache.org/schema/dubbo/dubbo.xsd">
 
 	<dubbo:application name="demo-consumer"/>
 
 	<dubbo:registry address="zookeeper://115.159.202.204:2181"/>
 
-	<dubbo:reference id="testService" check="true"
-					 interface="com.springDubbo.dubboService.TestService" version="1.0.0"/>
-<!--dubbo直连-->
-<!--	<dubbo:reference id="providerService"-->
-<!--					 interface="com.springDubbo.dubboService.TestService"-->
-<!--					 url="dubbo://115.159.202.204:2181:20890/com.springDubbo.dubboService.TestService"/>-->
-	<dubbo:reference id="testService1" check="true"
-					 interface="com.springDubbo.dubboService.TestService" version="1.0.0"/>
+	<dubbo:reference id="testService" check="false" interface="com.springDubbo.dubboService.TestService" version="1.0.0"/>
 
 </beans>

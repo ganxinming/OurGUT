@@ -1,0 +1,2 @@
+providerFilter= com.ourgut.dubboAdvance.filter.ProviderFilter
+consumerFilter= com.ourgut.dubboAdvance.filter.ConsumerFilter
