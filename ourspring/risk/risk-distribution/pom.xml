@@ -3,26 +3,24 @@
 		 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 		 xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<parent>
-		<artifactId>ourspring</artifactId>
+		<artifactId>risk</artifactId>
 		<groupId>org.gan</groupId>
 		<version>0.0.1-SNAPSHOT</version>
 	</parent>
 	<modelVersion>4.0.0</modelVersion>
 
-	<artifactId>risk</artifactId>
+	<artifactId>risk-distribution</artifactId>
 	<packaging>pom</packaging>
 	<modules>
-		<module>risk-distribution</module>
-		<module>risk-core</module>
-		<module>risk-sdk</module>
-		<module>risk-common</module>
+		<module>risk-distribution-common</module>
+		<module>risk-distribution-base</module>
 	</modules>
 
 	<dependencies>
-	<dependency>
-		<groupId>org.apache.commons</groupId>
-		<artifactId>commons-jexl</artifactId>
-		<version>2.1.1</version>
-	</dependency>
-</dependencies>
+		<dependency>
+			<groupId>org.gan</groupId>
+			<artifactId>risk-common</artifactId>
+			<version>0.0.1-SNAPSHOT</version>
+		</dependency>
+	</dependencies>
 </project>

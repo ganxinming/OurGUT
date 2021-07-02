@@ -16,7 +16,6 @@
 		<module>dubboConsumer</module>
 		<module>dubboService</module>
 		<module>dubboAdvanced</module>
-		<module>dubboAppnd</module>
 		<module>dubboAdvancedConsumer</module>
 	</modules>
 
