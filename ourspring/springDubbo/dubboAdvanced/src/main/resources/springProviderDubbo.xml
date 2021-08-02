@@ -6,8 +6,8 @@
 
 	<dubbo:application name="demo-advance-pro"/>
 
-<!--	<dubbo:registry address="N/A"/>-->
-	<dubbo:registry address="zookeeper://115.159.202.204:2181"/>
+	<dubbo:registry address="N/A"/>
+<!--	<dubbo:registry address="zookeeper://115.159.202.204:2181"/>-->
 
 	<dubbo:protocol name="dubbo" port="20890"/>
 	<!--暴露服务接口-->

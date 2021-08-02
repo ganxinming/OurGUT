@@ -14,6 +14,7 @@ import com.sun.tools.javac.util.ArrayUtils;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.apache.kafka.clients.consumer.ConsumerRecords;
 import org.apache.kafka.clients.consumer.KafkaConsumer;
+import org.apache.kafka.common.TopicPartition;
 
 /**
  * @author ganxinming
@@ -31,8 +32,9 @@ public class ConsumerTest {
 	public static void main(String[] args) {
 		KafkaConsumer<String, String> consumer = MyKafkaConsumer.getConsumer();
 		String topicArry[] = topicName.split(",");
-		//订阅主题
+		//订阅主题模式
 		consumer.subscribe(Arrays.asList(topicArry));
+
 		new Thread(() -> {
 			ConsumerRecords<String, String> consumerRecords = consumer.poll(Duration.ofSeconds(MESSAGE_POLL_TIMEOUT));
 			while (true) {

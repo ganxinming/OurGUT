@@ -5,9 +5,7 @@ import com.ourgut.springtest.People;
 import com.sun.tools.javac.util.List;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
-import org.junit.After;
-import org.junit.AfterClass;
-import org.junit.Before;
+
 
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.AfterEach;
@@ -142,7 +140,7 @@ public class Test1 {
 		compute.combination(people);
 	}
 
-	static List<Arguments> testPeople() {
+	static java.util.List<Arguments> testPeople() {
 		return List.of( // arguments:
 				Arguments.arguments(new People("gxm",24)),
 				Arguments.arguments(new People("mxg",24)));

@@ -24,6 +24,13 @@ public class TestHystrixController {
 		System.out.println("先做自己的事");
 		return "hystrix";
 	}
+
+	/**
+	 * 虽然每次请求都会new HttpHystrix，但其实没有重新new线程池，底层会查找这个线程池是否已存在，如果存在则使用
+	 * @return
+	 * @throws ExecutionException
+	 * @throws InterruptedException
+	 */
 	@RequestMapping("/queueTest")
 	public String testHystrixQueue() throws ExecutionException, InterruptedException {
 		HttpHystrix httpHystrix=new HttpHystrix("HttpHystrix", ConfigUtils.defaultThreadPoolConfig());
