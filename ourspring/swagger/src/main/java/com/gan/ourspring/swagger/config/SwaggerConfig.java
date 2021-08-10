@@ -20,7 +20,8 @@ import org.springframework.context.annotation.Configuration;
 /**
  * @author ganxinming
  * @createDate 2020/11/26
- * @description 访问http://localhost:8080/swagger-ui.html/
+ * @description 开启swaggerUi
+ * 访问http://localhost:8080/swagger-ui.html/
  */
 @Configuration
 @EnableSwagger2//开启Swagger2

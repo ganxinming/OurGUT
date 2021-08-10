@@ -125,7 +125,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 				.authorizeRequests()
 //				.antMatchers("/","/login").permitAll()
 				//对特定路径开放
-				.antMatchers("/doRegister","/register","/doLogin","/login").permitAll()
+				.antMatchers("/doRegister","/register","/doLogin","/login","/loginToken","/loginDeToken").permitAll()
 				//特定权限访问，注意在数据库中会补全字段 变成ROLE_ADMIN
 				.antMatchers("/admin/**").hasRole("ADMIN")
 				// 对于这样多角色判断的，使用 access 连接

@@ -41,6 +41,7 @@
 		<module>springNacos</module>
 		<module>springStrong</module>
 		<module>groovy</module>
+		<module>springIO</module>
 	</modules>
 
 	<properties>

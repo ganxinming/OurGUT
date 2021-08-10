@@ -17,12 +17,20 @@
 		<groupId>org.springframework.boot</groupId>
 		<artifactId>spring-boot-starter-security</artifactId>
 	</dependency>
-	<!-- jwt -->
+	<!-- jjwt 提供加解密-->
 	<dependency>
 		<groupId>io.jsonwebtoken</groupId>
 		<artifactId>jjwt</artifactId>
 		<version>0.9.1</version>
 	</dependency>
+
+	<!-- 提供jwt实现 -->
+	<dependency>
+		<groupId>com.auth0</groupId>
+		<artifactId>java-jwt</artifactId>
+		<version>3.16.0</version>
+	</dependency>
+
 
 	<dependency>
 		<groupId>org.springframework.boot</groupId>
