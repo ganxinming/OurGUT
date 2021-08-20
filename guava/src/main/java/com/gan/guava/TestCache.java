@@ -2,13 +2,17 @@ package com.gan.guava;
 
 import java.util.HashSet;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
+import com.google.common.cache.CacheLoader;
+import com.google.common.cache.LoadingCache;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
+import com.google.common.collect.Maps;
 
 /**
  * @author ganxinming
@@ -16,6 +20,25 @@ import com.google.common.collect.ImmutableSet;
  * @description
  */
 public class TestCache {
+
+	/**
+	 * 自定义，过期自定义重新加载缓存
+	 */
+	private static LoadingCache<String, Optional<Map>> INDICATOR_CACHE = CacheBuilder.newBuilder()
+			.maximumSize(10000).expireAfterAccess(5, TimeUnit.MINUTES)
+			.build(new CacheLoader<String, Optional<Map>>() {
+				@Override
+				public Optional<Map> load(String code) {
+					return createCache(code);
+				}
+			});
+	private static Optional<Map> createCache(String code) {
+		if (code != null) {
+			return Optional.of(Maps.newHashMap());
+		}
+		return Optional.empty();
+	}
+
 	public static void main(String[] args) throws InterruptedException {
 		 Cache<Object, Object> cache = CacheBuilder.newBuilder()
 				.maximumSize(10) //设置最大容量

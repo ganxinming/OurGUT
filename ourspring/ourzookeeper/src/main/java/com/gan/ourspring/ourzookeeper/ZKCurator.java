@@ -1,5 +1,6 @@
 package com.gan.ourspring.ourzookeeper;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.curator.framework.CuratorFramework;
@@ -13,8 +14,13 @@ import org.apache.curator.framework.recipes.cache.PathChildrenCacheListener;
 import org.apache.curator.framework.recipes.cache.TreeCache;
 import org.apache.curator.framework.recipes.cache.TreeCacheEvent;
 import org.apache.curator.framework.recipes.cache.TreeCacheListener;
+import org.apache.curator.framework.recipes.leader.LeaderLatch;
+import org.apache.curator.framework.recipes.leader.LeaderLatchListener;
+import org.apache.curator.framework.recipes.leader.LeaderSelector;
+import org.apache.curator.framework.recipes.leader.LeaderSelectorListenerAdapter;
 import org.apache.curator.retry.ExponentialBackoffRetry;
 import org.apache.curator.retry.RetryNTimes;
+import org.apache.curator.utils.CloseableUtils;
 import org.apache.zookeeper.CreateMode;
 import org.apache.zookeeper.WatchedEvent;
 import org.apache.zookeeper.ZooDefs;
@@ -37,6 +43,20 @@ import org.slf4j.LoggerFactory;
  * Curator引入Cache来实现对zookeeper服务端事务的监听。Cache是Curator中对事件监听的包装，其对事件的监听其实可以近似看作是一个本地缓存视图和远程Zookeeper视图的对比过程。
  * 同时，Curator能够自动为开发人员处理反复注册监听，从而大大简化原生api开发的繁琐过程。
  *
+ *主要功能:
+ * 监听：
+ * 1.NodeCache可以监听指定的节点，注册监听器后，节点的变化会通知相应的监听器.
+ * 2.Path Cache  用来监听ZNode的子节点事件，包括added、updateed、removed，Path Cache会同步子节点的状态，产生的事件会传递给注册的PathChildrenCacheListener。
+ * 3.Path Cache和Node Cache的“合体”，监视路径下的创建、更新、删除事件，并缓存路径下所有孩子结点的数据。
+ * 选举：
+ * curator提供了两种方式，分别是
+ * 1.Leader Latch：随机从候选着中选出一台作为leader
+ * 2.Leader Election:通过LeaderSelectorListener可以对领导权进行控制， 在适当的时候释放领导权，这样每个节点都有可能获得领导权
+ * 分布式锁：
+ * 1.可重入锁Shared Reentrant Lock：Shared意味着锁是全局可见的， 客户端都可以请求锁
+ * 2.不可重入锁Shared Lock
+ * 3.可重入读写锁Shared Reentrant Read Write Lock
+ * 4.信号量Shared Semaphore
  *
  */
 public class ZKCurator {
@@ -355,8 +375,89 @@ public class ZKCurator {
 	//=====================================================================================  待开发
 
 	/**
-	 * 选举
+	 * 选举：Leader Latch
+	 * 随机从候选着中选出一台作为leader，选中之后除非调用close()释放leadship，否则其他的后选择无法成为leader
 	 */
+	public static void electionLatch(String[] args) {
+		List<LeaderLatch> latchList = new ArrayList<>();
+		List<CuratorFramework> clients = new ArrayList<>();
+		try {
+			for (int i = 0; i < 10; i++) {
+				CuratorFramework client = getClient();
+				client.start();
+				clients.add(client);
+
+				final LeaderLatch leaderLatch = new LeaderLatch(client, PATH, "client#" + i);
+				leaderLatch.addListener(new LeaderLatchListener() {
+					@Override
+					public void isLeader() {
+						System.out.println(leaderLatch.getId() + ":I am leader. I am doing jobs!");
+					}
+
+					@Override
+					public void notLeader() {
+						System.out.println(leaderLatch.getId() + ":I am not leader. I will do nothing!");
+					}
+				});
+				latchList.add(leaderLatch);
+				leaderLatch.start();
+			}
+			Thread.sleep(1000 * 60);
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			for (CuratorFramework client : clients) {
+				CloseableUtils.closeQuietly(client);
+			}
+
+			for (LeaderLatch leaderLatch : latchList) {
+				CloseableUtils.closeQuietly(leaderLatch);
+			}
+		}
+	}
+
+	/**
+	 * 选举：Leader Election
+	 * 通过LeaderSelectorListener可以对领导权进行控制， 在适当的时候释放领导权，这样每个节点都有可能获得领导权。而LeaderLatch则一直持有leadership， 除非调用close方法，否则它不会释放领导权。
+	 * @param args
+	 */
+	public static void leaderElection(String[] args) {
+		List<LeaderSelector> selectors = new ArrayList<>();
+		List<CuratorFramework> clients = new ArrayList<>();
+		try {
+			for (int i = 0; i < 10; i++) {
+				CuratorFramework client = getClient();
+				client.start();
+				clients.add(client);
+
+				final String name = "client#" + i;
+				LeaderSelector leaderSelector = new LeaderSelector(client, PATH, new LeaderSelectorListenerAdapter() {
+					@Override
+					public void takeLeadership(CuratorFramework client) throws Exception {
+						System.out.println(name + ":I am leader.");
+						Thread.sleep(2000);
+					}
+				});
+
+				leaderSelector.autoRequeue();
+				leaderSelector.start();
+				selectors.add(leaderSelector);
+			}
+			Thread.sleep(Integer.MAX_VALUE);
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			for (CuratorFramework client : clients) {
+				CloseableUtils.closeQuietly(client);
+			}
+
+			for (LeaderSelector selector : selectors) {
+				CloseableUtils.closeQuietly(selector);
+			}
+
+		}
+	}
+
 
 	/**
 	 * 分布式锁，各种锁（可重入，不可重入）

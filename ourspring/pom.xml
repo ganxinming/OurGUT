@@ -42,6 +42,7 @@
 		<module>springStrong</module>
 		<module>groovy</module>
 		<module>springIO</module>
+		<module>devSpecifica</module>
 	</modules>
 
 	<properties>
