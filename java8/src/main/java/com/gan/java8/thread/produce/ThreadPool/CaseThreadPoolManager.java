@@ -29,6 +29,7 @@ public class CaseThreadPoolManager {
 
 	public static void submitToCaseThreadPool(CommonTask commonTask){
 		punishCountThreadPool.submit(()->{
+			punishCountThreadPool.shutdownNow();
 			commonTask.beforeExecute();
 			try {
 				commonTask.doExecute();

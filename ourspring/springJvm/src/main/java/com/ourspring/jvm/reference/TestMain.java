@@ -13,7 +13,7 @@ import java.lang.ref.WeakReference;
 public class TestMain {
 	public static void main(String[] args) {
 
-		gcPhantom();
+		gc4();
 		System.out.println("我运行完了。。。");
 	}
 
@@ -43,6 +43,16 @@ public class TestMain {
 	public static void gc3(){
 		GanReference reference=new GanReference();
 		reference=null;
+		ReferenceTest.createOOM();
+		ReferenceTest.createOOM();
+		ReferenceTest.createOOM();
+	}
+
+	/**
+	 * 发生gc，对象不手动为null，不会释放
+	 */
+	public static void gc4(){
+		GanReference reference=new GanReference();
 		ReferenceTest.createOOM();
 		ReferenceTest.createOOM();
 		ReferenceTest.createOOM();

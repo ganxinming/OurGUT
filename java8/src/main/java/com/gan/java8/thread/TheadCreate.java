@@ -1,6 +1,10 @@
 package com.gan.java8.thread;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import java.util.concurrent.ArrayBlockingQueue;
+import java.util.concurrent.Executor;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.LinkedBlockingQueue;
@@ -8,6 +12,7 @@ import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
 import com.gan.java8.thread.pojo.User;
+import com.gan.java8.thread.produce.ThreadPool.TestRunable;
 import org.junit.Test;
 
 /**
@@ -20,6 +25,7 @@ public class TheadCreate {
 
 
 
+	private String a;
 	/**
 	 * 通过Executors创建线程池，有四种方式。但是其核心都是通过改变
 	 * 核心线程，最大线程，队列等来达到下面四种线程池的目的
@@ -93,5 +99,20 @@ public class TheadCreate {
 			});
 		}
 	}
+
+
+	@Test
+	public void threadInterrupt(){
+
+		ExecutorService executorService = Executors.newFixedThreadPool(6);
+		/**
+		 * 线程池的执行任务，目的就是就把任务交给线程池处理，先处理后面的代码
+		 */
+		for(int j=0;j<10;j++){
+			executorService.execute(new TestRunable(String.valueOf(j)));
+		}
+		System.out.println("甘新明");
+	}
+
 
 }
