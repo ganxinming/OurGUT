@@ -14,7 +14,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
  * @createDate 2021/6/11
  * @description
  */
-@Configuration
+//@Configuration
 public class SecondDataSourceConfig {
 
 	/**

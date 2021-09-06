@@ -1,9 +1,9 @@
-zookeeper:
-  server: 115.159.202.204:2181
-  namespace: es-job
-
-
-job-config:
-  cron: 0/10 * * * * ?
-  shardCount: 1
-  shardItem: 0=A,1=B,2=C,3=D
+#zookeeper:
+#  server: 115.159.202.204:2181
+#  namespace: es-job
+#
+#
+#job-config:
+#  cron: 0/10 * * * * ?
+#  shardCount: 1
+#  shardItem: 0=A,1=B,2=C,3=D

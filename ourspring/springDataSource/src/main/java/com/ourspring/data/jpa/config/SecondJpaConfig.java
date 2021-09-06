@@ -21,15 +21,15 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
  * @createDate 2021/6/11
  * @description JPA多数据源配置 - 次 JPA 配置
  */
-@Configuration
-@EnableTransactionManagement
-@EnableJpaRepositories(
-		// repository包名
-		basePackages = SecondJpaConfig.REPOSITORY_PACKAGE,
-		// 实体管理bean名称
-		entityManagerFactoryRef = "secondEntityManagerFactory",
-		// 事务管理bean名称
-		transactionManagerRef = "secondTransactionManager")
+//@Configuration
+//@EnableTransactionManagement
+//@EnableJpaRepositories(
+//		// repository包名
+//		basePackages = SecondJpaConfig.REPOSITORY_PACKAGE,
+//		// 实体管理bean名称
+//		entityManagerFactoryRef = "secondEntityManagerFactory",
+//		// 事务管理bean名称
+//		transactionManagerRef = "secondTransactionManager")
 public class SecondJpaConfig {
 	//dao包名
 	static final String REPOSITORY_PACKAGE = "com.ourspring.data.jpa.dao.messqge";

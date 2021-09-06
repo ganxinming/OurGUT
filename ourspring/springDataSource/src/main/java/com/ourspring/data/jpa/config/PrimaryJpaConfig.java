@@ -26,15 +26,15 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
  *
  * JPA配置：1.创建 主库实体管理工厂 2.创建主库实体管理器 3.创建事务管理器
  */
-@Configuration
-@EnableTransactionManagement
-@EnableJpaRepositories(
-		// repository包名
-		basePackages = PrimaryJpaConfig.REPOSITORY_PACKAGE,
-		// 实体管理bean名称
-		entityManagerFactoryRef = "primaryEntityManagerFactory",
-		// 事务管理bean名称
-		transactionManagerRef = "primaryTransactionManager")
+//@Configuration
+//@EnableTransactionManagement
+//@EnableJpaRepositories(
+//		// repository包名
+//		basePackages = PrimaryJpaConfig.REPOSITORY_PACKAGE,
+//		// 实体管理bean名称
+//		entityManagerFactoryRef = "primaryEntityManagerFactory",
+//		// 事务管理bean名称
+//		transactionManagerRef = "primaryTransactionManager")
 public class PrimaryJpaConfig {
 	static final String REPOSITORY_PACKAGE = "com.ourspring.data.jpa.dao.user";
 	private static final String ENTITY_PACKAGE = "com.ourspring.data.jpa.entity.primary";

@@ -21,7 +21,6 @@
 		<module>ourspring/hystrix</module>
 		<module>jsonTest</module>
 		<module>algorithms</module>
-
 	</modules>
 
 	<groupId>org.gan</groupId>

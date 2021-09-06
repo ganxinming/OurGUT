@@ -15,7 +15,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
  * @createDate 2021/6/11
  * @description 类似数据源的配置就是分三步：1.读取配置参数 2.设置参数，生成数据源 3.利用数据源生成jdbcTemplate(JPA无需这一步)
  */
-@Configuration
+//@Configuration
 public class PrimaryDataSourceConfig {
 
 	@Primary
