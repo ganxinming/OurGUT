@@ -44,15 +44,19 @@ public class MyLogAspect {
 		log.info("切面before");
 	}
 
+	/**
+	 * @param joinPoint
+	 * @return 返回的对象，就是我们切点方法需要返回的那个对象(所以在around中可以对返回对象进行设置)
+	 */
 	@Around("controllerLog()")
-	public String aroundControllerLog(ProceedingJoinPoint joinPoint){
+	public Object aroundControllerLog(ProceedingJoinPoint joinPoint){
 		String name = joinPoint.getSignature().getDeclaringType().getSimpleName() + "." + joinPoint.getSignature()
 						.getName();
 		log.info(name);
 		try {
 			Object result = joinPoint.proceed();
 			log.info(result.toString());
-			return (String) result;
+			return result;
 		} catch (Throwable throwable) {
 			throwable.printStackTrace();
 		}
