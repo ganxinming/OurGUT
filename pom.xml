@@ -21,6 +21,8 @@
 		<module>ourspring/hystrix</module>
 		<module>jsonTest</module>
 		<module>algorithms</module>
+		<module>designPattern</module>
+		<module>myFlink</module>
 	</modules>
 
 	<groupId>org.gan</groupId>
