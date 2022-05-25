@@ -30,6 +30,7 @@ public class ABC1 {
                         lock.lock();
                         while (flag % 3 !=  0) {
                             conditionA.await();
+							System.out.println("A空转");
                         }
                             System.out.println("第"+(i+1)+"次:A");
                             flag++;
@@ -56,6 +57,7 @@ public class ABC1 {
                     lock.lock();
                     while (flag % 3  != 1) {
                         conditionB.await();
+						System.out.println("B空转");
                     }
                         System.out.println("第"+(i+1)+"次:B");
                         flag++;
@@ -81,6 +83,7 @@ public class ABC1 {
                     lock.lock();
                     while (flag % 3  != 2) {
                         conditionC.await();
+						System.out.println("C空转");
                     }
                         System.out.println("第"+(i+1)+"次:C");
                         flag++;

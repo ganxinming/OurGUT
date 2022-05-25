@@ -35,9 +35,15 @@ import java.util.Map;
  */
 public class Test3 {
 	public List<Integer> findAnagrams(String s2, String s1) {
+		/**
+		 * 即记录你需要匹配的字符串和对应的次数
+		 */
 		Map<Character,Integer> need=new HashMap<>();
+		/**
+		 * 记录你窗口中此时的字符和对应的数字
+		 */
 		Map<Character,Integer> window=new HashMap<>();
-		//初始化need
+		//初始化need,即记录你需要匹配的字符串和对应的次数
 		for (int i=0;i<s1.length();i++){
 			need.put(s1.charAt(i),need.getOrDefault(s1.charAt(i),0)+1);
 		}

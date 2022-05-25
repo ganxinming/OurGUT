@@ -1,12 +1,18 @@
 package com.ourspring.jvm.controller;
 
+import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
 import java.util.UUID;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledThreadPoolExecutor;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
+import com.google.common.collect.Lists;
 import com.ourspring.jvm.entity.JvmEntity;
 import org.apache.commons.lang3.SerializationUtils;
 
@@ -66,6 +72,12 @@ import org.springframework.web.bind.annotation.RestController;
  * -XX:GCTimeRatio=n:设置垃圾回收时间占程序运行时间的百分比。公式为1/(1+n)
  * 并发收集器设置
  * -XX:+CMSIncrementalMode:设置为增量模式。适用于单CPU情况。
+ *从字面就可以很容易的理解，在发生OutOfMemoryError异常时，进行堆的Dump，这样就可以获取异常时的内存快照了。
+ * -XX:+HeapDumpOnOutOfMemoryError
+ * 这个也很好理解，就是配置HeapDump的路径
+ * -XX:HeapDumpPath=/Users/ganxinming/
+ *
+ *
  */
 @RestController
 public class JvmController {
@@ -78,6 +90,7 @@ public class JvmController {
 	@RequestMapping("/test1")
 	public String test1() throws Exception{
 		ExecutorService executorService = Executors.newFixedThreadPool(50);
+		List<JvmEntity> list= Lists.newArrayList();
 		executorService.submit(()->{
 			int i=0;
 			while(true){
@@ -91,8 +104,11 @@ public class JvmController {
 						.name6(UUID.randomUUID().toString()+UUID.randomUUID().toString()+UUID.randomUUID().toString()+UUID.randomUUID().toString()).build();
 //				System.out.println(Thread.currentThread().getName()+"运行次数:"+i+"对象为："+entity.toString());
 				Thread.sleep(100);
+				list.add(entity);
+				System.out.println("list size:"+list.size());
 			}
 		});
+
 		return "jvm";
 	}
 
@@ -105,4 +121,53 @@ public class JvmController {
 			Thread.sleep(10000);
 		}
 	}
+
+
+	@RequestMapping("/outOfMemory")
+	public String outOfMemory() throws Exception{
+
+		executor.setMaximumPoolSize(50);
+		// 为什么是死循环？因为在生产环境中会有源源不断的数据需要处理，我们无法模拟线上环境， 所以用死循环代替；
+		for (;;){
+			modelFit();
+			Thread.sleep(100);
+		}
+	}
+
+	private static class CardInfo {
+		BigDecimal price = new BigDecimal(0.0);
+		String name = "张三";
+		int age = 5;
+
+		Date birthdate = new Date();
+
+		public void m() {}
+	}
+
+	private static ScheduledThreadPoolExecutor executor = new ScheduledThreadPoolExecutor(50,
+			new ThreadPoolExecutor.DiscardOldestPolicy());
+
+	private static void modelFit(){
+		List<CardInfo> taskList = getAllCardInfo();
+		taskList.forEach(info -> {
+			// do something
+			executor.scheduleWithFixedDelay(() -> {
+				//do sth with info
+				info.m();
+
+			}, 2, 3, TimeUnit.SECONDS);
+		});
+	}
+
+	private static List<CardInfo> getAllCardInfo(){
+		List<CardInfo> taskList = new ArrayList<>();
+
+		for (int i = 0; i < 100; i++) {
+			CardInfo ci = new CardInfo();
+			taskList.add(ci);
+		}
+
+		return taskList;
+	}
+
 }

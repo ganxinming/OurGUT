@@ -1,4 +1,4 @@
-#server:
-#  address: 8083
-#  servlet:
-#    context-path: /dev-api
+server:
+  servlet:
+    context-path: /dev-api
+  port: 8083

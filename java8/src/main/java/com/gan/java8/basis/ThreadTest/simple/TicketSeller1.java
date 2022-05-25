@@ -1,7 +1,9 @@
 package com.gan.java8.basis.ThreadTest.simple;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicInteger;
 
 /**
  * @Author Badribbit
@@ -19,15 +21,25 @@ public class TicketSeller1 {
             tickets.add("票号:"+i);
         }
     }
-    public static void main(String[] args) {
+    static  List<String> result = new ArrayList<>();
+    static AtomicInteger integer=new AtomicInteger();
+    public static void main(String[] args) throws InterruptedException {
           for (int i=0;i<10;i++){
-              new Thread( ()->{
+			  int finalI = i;
+			  new Thread( ()->{
                   while (tickets.size()>0){
-                     // synchronized (tickets)
-                          System.out.println("出售了票，" + tickets.remove(0));
+//                      synchronized (tickets){
+					  String remove = tickets.remove(0);
+					  System.out.println("窗口:"+ finalI +"出售了票，" + remove);
+//					  }
+					  integer.incrementAndGet();
+					  result.add(remove);
                       }
 
               } ).start();
           }
+          Thread.sleep(2000);
+		System.out.println(integer.get());
+		System.out.println(result);
     }
 }
